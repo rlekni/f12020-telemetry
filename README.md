@@ -1,16 +1,15 @@
 # go-f1-telemetry
 
-# F1 2020
+## F1 2020
 
 Telemetry specification [found here](https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/)
 
-# UDP Server and Client
+## UDP Server and Client
 
 Server:
 
 * `go run main.go 1234` where 1234 is a PORT
 
-# Packets
 ## Packet IDs
 
 The packets IDs are as follows:
@@ -30,6 +29,7 @@ The packets IDs are as follows:
 
 
 ## Event String Codes
+
 | Event                | Code   | Description                                    |
 | -------------------- | ------ | ---------------------------------------------- |
 | Session Started      | “SSTA” | Sent when the session starts                   |
