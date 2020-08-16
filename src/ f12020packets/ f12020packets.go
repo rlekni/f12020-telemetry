@@ -1,4 +1,8 @@
-package f1packets
+package f12020packets
+
+/*
+F1 2020 UDP Telemetry specification
+*/
 
 // PacketHeader each packet has the header
 type PacketHeader struct {
