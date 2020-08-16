@@ -10,10 +10,6 @@ Server:
 
 * `go run main.go 1234` where 1234 is a PORT
 
-Client:
-
-* `go run udpc.go 127.0.0.1:1234`
-
 # Packets
 ## Packet IDs
 
