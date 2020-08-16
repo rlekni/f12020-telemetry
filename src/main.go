@@ -16,11 +16,13 @@ func random(min, max int) int {
 
 func main() {
 	arguments := os.Args
+	portInput := "20777"
 	if len(arguments) == 1 {
-		fmt.Println("Please provide a port number!")
-		return
+		fmt.Println("NOTE: port number not provided, defaulting to 20777")
+	} else {
+		portInput = arguments[1]
 	}
-	PORT := ":" + arguments[1]
+	PORT := ":" + portInput
 
 	s, err := net.ResolveUDPAddr("udp4", PORT)
 	if err != nil {

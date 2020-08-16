@@ -10,6 +10,8 @@ Server:
 
 * `go run main.go 1234` where 1234 is a PORT
 
+NOTE: If port number is not provided, defaults to use 20777
+
 ## Packet IDs
 
 The packets IDs are as follows:
