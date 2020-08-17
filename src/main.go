@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"net"
 	"os"
@@ -36,11 +37,24 @@ func main() {
 
 	defer connection.Close()
 
+	// If the file doesn't exist, create it, or append to the file
+	dataFile, err := os.OpenFile("data.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer dataFile.Close()
+
 	// Make buffer big enough 2048 should be enough
 	buffer := make([]byte, 2048)
 
 	for {
 		n, addr, err := connection.ReadFromUDP(buffer)
+		if err != nil {
+			fmt.Println(err)
+			// Log
+			continue
+		}
 		fmt.Print("-> ", addr)
 
 		// Stop the server if STOP command is received
@@ -51,10 +65,10 @@ func main() {
 
 		data := buffer[0:n]
 		fmt.Printf(" Data length: %d \n", len(data))
-		if err != nil {
-			fmt.Println(err)
-			// Log
-			continue
+
+		if _, err := dataFile.Write(data); err != nil {
+			log.Fatal(err)
+			return
 		}
 	}
 }
