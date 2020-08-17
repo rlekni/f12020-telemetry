@@ -53,8 +53,8 @@ type CarMotionData struct {
 
 // PacketMotionData packet gives physics data for all the cars being driven
 type PacketMotionData struct {
-	Header        PacketHeader      // Header
-	CarMotionData [22]CarMotionData // Data for all cars on track
+	Header        *PacketHeader      // Header
+	CarMotionData [22]*CarMotionData // Data for all cars on track
 
 	// Extra player car ONLY data
 	SuspensionPosition     [4]float32 // Note: All wheel arrays have the following order:
