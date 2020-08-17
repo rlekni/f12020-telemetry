@@ -5,9 +5,7 @@ import (
 	"math/rand"
 	"net"
 	"os"
-	"strconv"
 	"strings"
-	"time"
 )
 
 func random(min, max int) int {
@@ -37,24 +35,26 @@ func main() {
 	}
 
 	defer connection.Close()
-	buffer := make([]byte, 1024)
-	rand.Seed(time.Now().Unix())
+
+	// Make buffer big enough 2048 should be enough
+	buffer := make([]byte, 2048)
 
 	for {
 		n, addr, err := connection.ReadFromUDP(buffer)
-		fmt.Print("-> ", string(buffer[0:n-1]))
+		fmt.Print("-> ", addr)
 
+		// Stop the server if STOP command is received
 		if strings.TrimSpace(string(buffer[0:n])) == "STOP" {
 			fmt.Println("Exiting UDP server!")
 			return
 		}
 
-		data := []byte(strconv.Itoa(random(1, 1001)))
-		fmt.Printf("data: %s\n", string(data))
-		_, err = connection.WriteToUDP(data, addr)
+		data := buffer[0:n]
+		fmt.Printf(" Data length: %d \n", len(data))
 		if err != nil {
 			fmt.Println(err)
-			return
+			// Log
+			continue
 		}
 	}
 }
