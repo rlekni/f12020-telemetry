@@ -45,3 +45,18 @@ The packets IDs are as follows:
 | Race Winner          | “RCWN” | The race winner is announced                   |
 | Penalty Issued       | “PENA” | A penalty has been issued – details in event   |
 | Speed Trap Triggered | “SPTP” | Speed trap has been triggered by fastest speed |
+
+### Main packets
+
+| Packet Name                   | Size in bytes | Frequency                       |
+| ----------------------------- | ------------- | ------------------------------- |
+| PacketMotionData              | 1464          | Rate in menus (20 Hz)           |
+| PacketSessionData             | 251           | 2 per second                    |
+| PacketLapData                 | 1190          | Rate in menus (20 Hz)           |
+| PacketEventData               | 35            | When even occurs                |
+| PacketParticipantsData        | 1213          | Every 5 seconds                 |
+| PacketCarSetupData            | 1102          | 2 per second                    |
+| PacketCarTelemetryData        | 1307          | Rate in menus (20 Hz)           |
+| PacketCarStatusData           | 1344          | Rate in menus (20 Hz)           |
+| PacketFinalClassificationData | 839           | Once at the end of a race       |
+| PacketLobbyInfoData           | 1169          | 2 per second, when in the lobby |
