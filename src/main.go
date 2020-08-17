@@ -1,9 +1,7 @@
 package main
 
 import (
-	"encoding/gob"
 	"fmt"
-	"main/f12020packets"
 	"math/rand"
 	"net"
 	"os"
@@ -50,19 +48,18 @@ func main() {
 		}
 		fmt.Print("-> ", addr)
 		data := buffer[0:n]
-		fmt.Printf(" Data length: %d", len(data))
+		fmt.Printf(" Data length: %d\n", len(data))
 
-		// var network bytes.Buffer
-		// network.Write(data)
-		enc := gob.NewDecoder(connection)
-		var packet f12020packets.TestDataPacket
-		err = enc.Decode(&packet)
+		// if len(data) == 1464 {
+		// 	enc := gob.NewDecoder(connection)
+		// 	var packet f12020packets.PacketMotionData
+		// 	err = enc.Decode(&packet)
+		// 	fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		// }
 		if err != nil {
 			fmt.Println(err)
 			// Log
 			continue
 		}
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.PacketFormat, packet.GameMajorVersion, packet.GameMinorVersion)
-		// return
 	}
 }
