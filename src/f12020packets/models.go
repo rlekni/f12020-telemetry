@@ -4,6 +4,12 @@ package f12020packets
 F1 2020 UDP Telemetry specification
 */
 
+type TestDataPacket struct {
+	PacketFormat     uint16
+	GameMajorVersion uint8
+	GameMinorVersion uint8
+}
+
 // PacketHeader each packet has the header
 type PacketHeader struct {
 	m_packetFormat     uint16  // 2020
