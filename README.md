@@ -66,3 +66,13 @@ The packets IDs are as follows:
 
 * Add Logging https://github.com/sirupsen/logrus
 * Add Store >> MongoDB
+
+## Mongo
+
+Setup:
+
+* `sudo mkdir -p /mongodata`
+* `sudo docker run -it -v /data/db:/mongodata -p 27017:27017 --name mongodb -d mongo`
+* `sudo docker start mongodb`
+
+To access the databases, download mongo compass
