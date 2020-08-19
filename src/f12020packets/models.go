@@ -4,12 +4,6 @@ package f12020packets
 F1 2020 UDP Telemetry specification
 */
 
-type TestDataPacket struct {
-	PacketFormat     uint16
-	GameMajorVersion uint8
-	GameMinorVersion uint8
-}
-
 // PacketHeader each packet has the header
 type PacketHeader struct {
 	PacketFormat     uint16  // 2020
@@ -53,8 +47,8 @@ type CarMotionData struct {
 
 // PacketMotionData packet gives physics data for all the cars being driven
 type PacketMotionData struct {
-	Header        *PacketHeader      // Header
-	CarMotionData [22]*CarMotionData // Data for all cars on track
+	Header        *PacketHeader     // Header
+	CarMotionData [22]CarMotionData // Data for all cars on track
 
 	// Extra player car ONLY data
 	SuspensionPosition     [4]float32 // Note: All wheel arrays have the following order:
