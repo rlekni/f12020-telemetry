@@ -50,8 +50,8 @@ func ToPacketHeader(data []byte) (*PacketHeader, error) {
 
 // 60 bytes
 func ToCarMotionData(data []byte) (*CarMotionData, error) {
-	if len(data) != 61 {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 61, len(data))
+	if len(data) != 60 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 60, len(data))
 	}
 	motionData := &CarMotionData{}
 

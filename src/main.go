@@ -55,6 +55,8 @@ func deserialisePacket(data []byte) {
 	case 1464:
 		fmt.Print("Deserialising PacketMotionData")
 		packet, _ := f12020packets.ToPacketMotionData(data[0:1464])
+		// json, _ := json.Marshal(packet)
+		// fmt.Println(string(json))
 		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
 	case 251:
 		fmt.Print("Deserialising PacketSessionData")
@@ -62,7 +64,7 @@ func deserialisePacket(data []byte) {
 		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
 	case 1190:
 		fmt.Print("Deserialising PacketLapData")
-		packet, _ := f12020packets.ToPacketLapData(data[0:251])
+		packet, _ := f12020packets.ToPacketLapData(data[0:1190])
 		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
 	case 35:
 		fmt.Print("Deserialising PacketEventData")
