@@ -97,7 +97,7 @@ type WeatherForecastSample struct {
 
 // PacketSessionData Packet construct for the session
 type PacketSessionData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	// Weather - 0 = clear, 1 = light cloud, 2 = overcast
 	// 3 = light rain, 4 = heavy rain, 5 = storm
@@ -190,7 +190,7 @@ type LapData struct {
 
 // PacketLapData packet construct for lap data
 type PacketLapData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	LapData [22]LapData // Lap data for all cars on track
 }
@@ -205,6 +205,7 @@ type PacketLapData struct {
 // EventDataDetails Stub interface for Event data details
 // The event details packet is different for each type of event.
 // Make sure only the correct type is interpreted.
+// TODO
 type EventDataDetails interface{}
 
 // FastestLap Event on fastest lap
@@ -247,7 +248,7 @@ type SpeedTrap struct {
 
 // PacketEventData event packet construct
 type PacketEventData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	// Event string code, see below
 	// Event details - should be interpreted differently
@@ -284,7 +285,7 @@ type ParticipantData struct {
 
 // PacketParticipantsData packet construct for participants data
 type PacketParticipantsData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	// Number of active cars in the data – should match number of
 	// cars on HUD
@@ -327,7 +328,7 @@ type CarSetupData struct {
 
 // PacketCarSetupData packet construct for session car setup data for all participants
 type PacketCarSetupData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	CarSetups [22]CarSetupData
 }
@@ -359,7 +360,7 @@ type CarTelemetryData struct {
 
 // PacketCarTelemetryData packet construct for car telemetry data
 type PacketCarTelemetryData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	CarTelemetryData [22]CarTelemetryData
 
@@ -450,7 +451,7 @@ type CarStatusData struct {
 
 // PacketCarStatusData packet construct for car status
 type PacketCarStatusData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	CarStatusData [22]CarStatusData
 }
@@ -484,7 +485,7 @@ type FinalClassificationData struct {
 
 // PacketFinalClassificationData packet construct for final classification data
 type PacketFinalClassificationData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	NumCars            uint8 // Number of cars in the final classification
 	ClassificationData [22]FinalClassificationData
@@ -511,7 +512,7 @@ type LobbyInfoData struct {
 
 // PacketLobbyInfoData packet construct for lobby information
 type PacketLobbyInfoData struct {
-	Header PacketHeader // Header
+	Header *PacketHeader // Header
 
 	// Packet specific data
 	NumPlayers   uint8 // Number of players in the lobby data

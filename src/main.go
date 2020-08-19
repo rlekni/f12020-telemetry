@@ -44,15 +44,55 @@ func main() {
 		}
 		fmt.Print("-> ", addr)
 		data := buffer[0:n]
-		fmt.Printf(" Data length: %d, byte 0: %q\n", len(data), uint8(data[2]))
 
-		if len(data) == 1464 {
-			packet, err := f12020packets.ToPacketMotionData(data[0:1464])
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-			fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
-		}
+		deserialisePacket(data)
+	}
+}
+
+func deserialisePacket(data []byte) {
+	fmt.Printf(" Data length: %d\n", len(data))
+	switch len(data) {
+	case 1464:
+		fmt.Print("Deserialising PacketMotionData")
+		packet, _ := f12020packets.ToPacketMotionData(data[0:1464])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 251:
+		fmt.Print("Deserialising PacketSessionData")
+		packet, _ := f12020packets.ToPacketSessionData(data[0:251])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 1190:
+		fmt.Print("Deserialising PacketLapData")
+		packet, _ := f12020packets.ToPacketLapData(data[0:251])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 35:
+		fmt.Print("Deserialising PacketEventData")
+		packet, _ := f12020packets.ToPacketEventData(data[0:35])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 1213:
+		fmt.Print("Deserialising PacketParticipantsData")
+		packet, _ := f12020packets.ToPacketParticipantsData(data[0:1213])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 1102:
+		fmt.Print("Deserialising PacketCarSetupData")
+		packet, _ := f12020packets.ToPacketCarSetupData(data[0:1102])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 1307:
+		fmt.Print("Deserialising PacketCarTelemetryData")
+		packet, _ := f12020packets.ToPacketCarTelemetryData(data[0:1307])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 1344:
+		fmt.Print("Deserialising PacketCarStatusData")
+		packet, _ := f12020packets.ToPacketCarStatusData(data[0:1344])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 839:
+		fmt.Print("Deserialising PacketFinalClassificationData")
+		packet, _ := f12020packets.ToPacketFinalClassificationData(data[0:839])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	case 1169:
+		fmt.Print("Deserialising PacketLobbyInfoData")
+		packet, _ := f12020packets.ToPacketLobbyInfoData(data[0:1169])
+		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+	default:
+		fmt.Printf("None of the defined lengths matched. Data length: %d", len(data))
 	}
 }

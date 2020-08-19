@@ -68,7 +68,7 @@ func ToPacketMotionData(data []byte) (*PacketMotionData, error) {
 	}
 	header, err := ToPacketHeader(data[0:24])
 	if err != nil {
-		return nil, fmt.Errorf("Failed to To Packet Header")
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
 	}
 
 	// 1320 bytes in total
@@ -101,5 +101,131 @@ func ToPacketMotionData(data []byte) (*PacketMotionData, error) {
 		FrontWheelsAngle:       convertToFloat32(data[1459:1463]),
 	}
 
+	return packet, nil
+}
+
+func ToPacketSessionData(data []byte) (*PacketSessionData, error) {
+	if len(data) != 251 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 251, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketSessionData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketLapData(data []byte) (*PacketLapData, error) {
+	if len(data) != 1190 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 1190, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketLapData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketEventData(data []byte) (*PacketEventData, error) {
+	if len(data) != 35 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 35, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketEventData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketParticipantsData(data []byte) (*PacketParticipantsData, error) {
+	if len(data) != 1213 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 1213, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketParticipantsData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketCarSetupData(data []byte) (*PacketCarSetupData, error) {
+	if len(data) != 1102 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 1102, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketCarSetupData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketCarTelemetryData(data []byte) (*PacketCarTelemetryData, error) {
+	if len(data) != 1307 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 1307, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketCarTelemetryData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketCarStatusData(data []byte) (*PacketCarStatusData, error) {
+	if len(data) != 1344 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 1344, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketCarStatusData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketFinalClassificationData(data []byte) (*PacketFinalClassificationData, error) {
+	if len(data) != 839 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 839, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketFinalClassificationData{
+		Header: header,
+	}
+	return packet, nil
+}
+
+func ToPacketLobbyInfoData(data []byte) (*PacketLobbyInfoData, error) {
+	if len(data) != 1169 {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", 1169, len(data))
+	}
+	header, err := ToPacketHeader(data[0:24])
+	if err != nil {
+		return nil, fmt.Errorf("Failed to deserialise to Packet Header")
+	}
+	packet := &PacketLobbyInfoData{
+		Header: header,
+	}
 	return packet, nil
 }
