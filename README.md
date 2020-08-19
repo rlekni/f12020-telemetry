@@ -1,6 +1,6 @@
 # go-f1-telemetry
 
-[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20)
+[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=serialisation)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=serialisation)
 
 ## F1 2020
 
