@@ -61,12 +61,6 @@ The packets IDs are as follows:
 | PacketFinalClassificationData | 839           | Once at the end of a race       |
 | PacketLobbyInfoData           | 1169          | 2 per second, when in the lobby |
 
-
-## TODO
-
-* Add Logging https://github.com/sirupsen/logrus
-* Add Store >> MongoDB
-
 ## Mongo
 
 Setup:
