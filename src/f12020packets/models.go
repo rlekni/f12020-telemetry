@@ -210,40 +210,40 @@ type PacketLapData struct {
 
 // FastestLap Event on fastest lap
 type FastestLap struct {
-	vehicleIdx uint8   // Vehicle index of car achieving fastest lap
-	lapTime    float32 // Lap time is in seconds
+	VehicleIdx uint8   // Vehicle index of car achieving fastest lap
+	LapTime    float32 // Lap time is in seconds
 }
 
 // Retirement Event on car getting retired from a race
 type Retirement struct {
-	vehicleIdx uint8 // Vehicle index of car retiring
+	VehicleIdx uint8 // Vehicle index of car retiring
 }
 
 // TeamMateInPits Event
 type TeamMateInPits struct {
-	vehicleIdx uint8 // Vehicle index of team mate
+	VehicleIdx uint8 // Vehicle index of team mate
 }
 
 // RaceWinner Event
 type RaceWinner struct {
-	vehicleIdx uint8 // Vehicle index of the race winner
+	VehicleIdx uint8 // Vehicle index of the race winner
 }
 
 // Penalty event providing details on a penalty
 type Penalty struct {
-	penaltyType      uint8 // Penalty type – see Appendices
-	infringementType uint8 // Infringement type – see Appendices
-	vehicleIdx       uint8 // Vehicle index of the car the penalty is applied to
-	otherVehicleIdx  uint8 // Vehicle index of the other car involved
-	time             uint8 // Time gained, or time spent doing action in seconds
-	lapNum           uint8 // Lap the penalty occurred on
-	placesGained     uint8 // Number of places gained by this
+	PenaltyType      uint8 // Penalty type – see Appendices
+	InfringementType uint8 // Infringement type – see Appendices
+	VehicleIdx       uint8 // Vehicle index of the car the penalty is applied to
+	OtherVehicleIdx  uint8 // Vehicle index of the other car involved
+	Time             uint8 // Time gained, or time spent doing action in seconds
+	LapNum           uint8 // Lap the penalty occurred on
+	PlacesGained     uint8 // Number of places gained by this
 }
 
 // SpeedTrap Event
 type SpeedTrap struct {
-	vehicleIdx uint8   // Vehicle index of the vehicle triggering speed trap
-	speed      float32 // Top speed achieved in kilometres per hour
+	VehicleIdx uint8   // Vehicle index of the vehicle triggering speed trap
+	Speed      float32 // Top speed achieved in kilometres per hour
 }
 
 // PacketEventData event packet construct
