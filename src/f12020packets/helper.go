@@ -30,6 +30,7 @@ const (
 	penaltyLength               = 7
 	speedTrapLength             = 5
 	participantDataLength       = 54
+	carSetupDataLength          = 49
 )
 
 /*
@@ -425,10 +426,54 @@ func ToPacketParticipantsData(data []byte, header *PacketHeader) (*PacketPartici
 	return packet, nil
 }
 
+func ToCarSetupData(data []byte) (*CarSetupData, error) {
+	if len(data) != carSetupDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carSetupDataLength, len(data))
+	}
+
+	carSetupData := &CarSetupData{
+		FrontWing:              uint8(data[0]),
+		RearWing:               uint8(data[1]),
+		OnThrottle:             uint8(data[2]),
+		OffThrottle:            uint8(data[3]),
+		FrontCamber:            convertToFloat32(data[4:8]),
+		RearCamber:             convertToFloat32(data[8:12]),
+		FrontToe:               convertToFloat32(data[12:16]),
+		RearToe:                convertToFloat32(data[16:20]),
+		FrontSuspension:        uint8(data[20]),
+		RearSuspension:         uint8(data[21]),
+		FrontAntiRollBar:       uint8(data[22]),
+		RearAntiRollBar:        uint8(data[23]),
+		FrontSuspensionHeight:  uint8(data[24]),
+		RearSuspensionHeight:   uint8(data[25]),
+		BrakePressure:          uint8(data[26]),
+		BrakeBias:              uint8(data[27]),
+		RearLeftTyrePressure:   convertToFloat32(data[28:32]),
+		RearRightTyrePressure:  convertToFloat32(data[32:36]),
+		FrontLeftTyrePressure:  convertToFloat32(data[36:40]),
+		FrontRightTyrePressure: convertToFloat32(data[40:44]),
+		Ballast:                uint8(data[44]),
+		FuelLoad:               convertToFloat32(data[45:49]),
+	}
+
+	return carSetupData, nil
+}
+
 func ToPacketCarSetupData(data []byte, header *PacketHeader) (*PacketCarSetupData, error) {
 	if len(data) != packetCarSetupDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetCarSetupDataLength, len(data))
 	}
+
+	// 1188 bytes in total
+	var carSetupData [22]CarSetupData
+	for i := 0; i < 22; i++ {
+		startIndex := 0 + (i * carSetupDataLength)
+		endIndex := startIndex + carSetupDataLength
+
+		payload, _ := ToCarSetupData(data[startIndex:endIndex])
+		carSetupData[i] = *payload
+	}
+
 	packet := &PacketCarSetupData{
 		Header: header,
 	}
