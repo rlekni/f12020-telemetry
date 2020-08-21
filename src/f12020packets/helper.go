@@ -22,6 +22,7 @@ const (
 	carMotionDataLength         = 60
 	marshalZoneLength           = 5
 	weatherForecastSampleLength = 5
+	lapDataLength               = 53
 )
 
 /*
@@ -224,12 +225,61 @@ func ToPacketSessionData(data []byte, header *PacketHeader) (*PacketSessionData,
 	return packet, nil
 }
 
+func ToLapData(data []byte) (*LapData, error) {
+	if len(data) != lapDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", lapDataLength, len(data))
+	}
+	lapData := &LapData{
+		LastLapTime:                convertToFloat32(data[0:4]),
+		CurrentLapTime:             convertToFloat32(data[4:8]),
+		Sector1TimeInMS:            binary.LittleEndian.Uint16(data[8:10]),
+		Sector2TimeInMS:            binary.BigEndian.Uint16(data[10:12]),
+		BestLapTime:                convertToFloat32(data[12:16]),
+		BestLapNum:                 uint8(data[16]),
+		BestLapSector1TimeInMS:     binary.LittleEndian.Uint16(data[17:19]),
+		BestLapSector2TimeInMS:     binary.LittleEndian.Uint16(data[19:21]),
+		BestLapSector3TimeInMS:     binary.LittleEndian.Uint16(data[21:23]),
+		BestOverallSector1TimeInMS: binary.LittleEndian.Uint16(data[23:25]),
+		BestOverallSector1LapNum:   uint8(data[25]),
+		BestOverallSector2TimeInMS: binary.LittleEndian.Uint16(data[26:28]),
+		BestOverallSector2LapNum:   uint8(data[28]),
+		BestOverallSector3TimeInMS: binary.LittleEndian.Uint16(data[29:31]),
+		BestOverallSector3LapNum:   uint8(data[32]),
+		LapDistance:                convertToFloat32(data[33:37]),
+		TotalDistance:              convertToFloat32(data[37:41]),
+		SafetyCarDelta:             convertToFloat32(data[41:45]),
+		CarPosition:                uint8(data[45]),
+		CurrentLapNum:              uint8(data[46]),
+		PitStatus:                  uint8(data[47]),
+		Sector:                     uint8(data[48]),
+		CurrentLapInvalid:          uint8(data[49]),
+		Penalties:                  uint8(data[50]),
+		GridPosition:               uint8(data[51]),
+		DriverStatus:               uint8(data[52]),
+		ResultStatus:               uint8(data[53]),
+	}
+
+	return lapData, nil
+}
+
 func ToPacketLapData(data []byte, header *PacketHeader) (*PacketLapData, error) {
 	if len(data) != packetLapDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetLapDataLength, len(data))
 	}
+
+	// 100 bytes in total
+	var lapDatas [22]LapData
+	for i := 0; i < 22; i++ {
+		startIndex := 0 + (i * lapDataLength)
+		endIndex := startIndex + lapDataLength
+
+		payload, _ := ToLapData(data[startIndex:endIndex])
+		lapDatas[i] = *payload
+	}
+
 	packet := &PacketLapData{
-		Header: header,
+		Header:  header,
+		LapData: lapDatas,
 	}
 	return packet, nil
 }
