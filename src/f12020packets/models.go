@@ -278,7 +278,7 @@ type ParticipantData struct {
 	// Name of participant in UTF-8 format – null terminated
 	// Will be truncated with … (U+2026) if too long
 	Nationality uint8
-	Name        string
+	Name        string // 48 bytes
 
 	YourTelemetry uint8 // The player's UDP setting, 0 = restricted, 1 = public
 }

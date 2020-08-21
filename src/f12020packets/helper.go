@@ -29,6 +29,7 @@ const (
 	raceWinnerLength            = 1
 	penaltyLength               = 7
 	speedTrapLength             = 5
+	participantDataLength       = 54
 )
 
 /*
@@ -383,12 +384,43 @@ func ToPacketEventData(data []byte, header *PacketHeader) (*PacketEventData, err
 	return packet, nil
 }
 
+func ToParticipantData(data []byte) (*ParticipantData, error) {
+	if len(data) != participantDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", participantDataLength, len(data))
+	}
+
+	participantData := &ParticipantData{
+		AiControlled:  uint8(data[0]),
+		DriverID:      uint8(data[1]),
+		TeamID:        uint8(data[2]),
+		RaceNumber:    uint8(data[3]),
+		Nationality:   uint8(data[4]),
+		Name:          string(data[5:53]),
+		YourTelemetry: uint8(data[54]),
+	}
+
+	return participantData, nil
+}
+
 func ToPacketParticipantsData(data []byte, header *PacketHeader) (*PacketParticipantsData, error) {
 	if len(data) != packetParticipantsDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetParticipantsDataLength, len(data))
 	}
+
+	// 1188 bytes in total
+	var participantData [22]ParticipantData
+	for i := 0; i < 22; i++ {
+		startIndex := 1 + (i * participantDataLength)
+		endIndex := startIndex + participantDataLength
+
+		payload, _ := ToParticipantData(data[startIndex:endIndex])
+		participantData[i] = *payload
+	}
+
 	packet := &PacketParticipantsData{
-		Header: header,
+		Header:        header,
+		NumActiveCars: uint8(data[0]),
+		Participants:  participantData,
 	}
 	return packet, nil
 }
