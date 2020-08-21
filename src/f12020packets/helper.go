@@ -31,6 +31,7 @@ const (
 	speedTrapLength             = 5
 	participantDataLength       = 54
 	carSetupDataLength          = 49
+	carTelemetryDataLength      = 58
 )
 
 /*
@@ -43,7 +44,7 @@ func convertToFloat32(data []byte) float32 {
 	return math.Float32frombits(binary.LittleEndian.Uint32(data))
 }
 
-func convertTo4ByteFloat32Array(data []byte) [4]float32 {
+func convertTo4LengthFloat32Array(data []byte) [4]float32 {
 	var result [4]float32
 	for i := 0; i < 4; i++ {
 		startIndex := 0 + (i * 4)
@@ -59,6 +60,25 @@ func convertToint16(data []byte) int16 {
 	value |= int16(data[0])
 	value |= int16(data[1]) << 8
 	return value
+}
+
+func convertTo4LengthUint16Array(data []byte) [4]uint16 {
+	var result [4]uint16
+	for i := 0; i < 4; i++ {
+		startIndex := 0 + (i * 4)
+		endIndex := startIndex + 4
+		value := binary.LittleEndian.Uint16(data[startIndex:endIndex])
+		result[i] = value
+	}
+	return result
+}
+
+func convertTo4LengthUint8Array(data []byte) [4]uint8 {
+	var result [4]uint8
+	for i := 0; i < 4; i++ {
+		result[i] = uint8(data[i])
+	}
+	return result
 }
 
 // 23 bytes
@@ -134,11 +154,11 @@ func ToPacketMotionData(data []byte, header *PacketHeader) (*PacketMotionData, e
 	packet := &PacketMotionData{
 		Header:                 header,
 		CarMotionData:          motionData,
-		SuspensionPosition:     convertTo4ByteFloat32Array(data[1319:1335]),
-		SuspensionVelocity:     convertTo4ByteFloat32Array(data[1335:1351]),
-		SuspensionAcceleration: convertTo4ByteFloat32Array(data[1351:1367]),
-		WheelSpeed:             convertTo4ByteFloat32Array(data[1367:1383]),
-		WheelSlip:              convertTo4ByteFloat32Array(data[1383:1399]),
+		SuspensionPosition:     convertTo4LengthFloat32Array(data[1319:1335]),
+		SuspensionVelocity:     convertTo4LengthFloat32Array(data[1335:1351]),
+		SuspensionAcceleration: convertTo4LengthFloat32Array(data[1351:1367]),
+		WheelSpeed:             convertTo4LengthFloat32Array(data[1367:1383]),
+		WheelSlip:              convertTo4LengthFloat32Array(data[1383:1399]),
 		LocalVelocityX:         convertToFloat32(data[1399:1403]),
 		LocalVelocityY:         convertToFloat32(data[1403:1407]),
 		LocalVelocityZ:         convertToFloat32(data[1407:1411]),
@@ -480,12 +500,54 @@ func ToPacketCarSetupData(data []byte, header *PacketHeader) (*PacketCarSetupDat
 	return packet, nil
 }
 
+func ToCarTelemetryData(data []byte) (*CarTelemetryData, error) {
+	if len(data) != carTelemetryDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carTelemetryDataLength, len(data))
+	}
+
+	carTelemetryData := &CarTelemetryData{
+		Speed:                   binary.LittleEndian.Uint16(data[0:2]),
+		Throttle:                convertToFloat32(data[2:6]),
+		Steer:                   convertToFloat32(data[6:10]),
+		Brake:                   convertToFloat32(data[10:14]),
+		Clutch:                  uint8(data[14]),
+		Gear:                    int8(data[15]),
+		EngineRPM:               binary.LittleEndian.Uint16(data[16:18]),
+		Drs:                     uint8(data[18]),
+		RevLightsPercent:        uint8(data[19]),
+		BrakesTemperature:       convertTo4LengthUint16Array(data[20:28]),
+		TyresSurfaceTemperature: convertTo4LengthUint8Array(data[28:32]),
+		TyresInnerTemperature:   convertTo4LengthUint8Array(data[32:36]),
+		EngineTemperature:       binary.LittleEndian.Uint16(data[36:38]),
+		TyresPressure:           convertTo4LengthFloat32Array(data[38:54]),
+		SurfaceType:             convertTo4LengthUint8Array(data[54:58]),
+	}
+
+	return carTelemetryData, nil
+}
+
 func ToPacketCarTelemetryData(data []byte, header *PacketHeader) (*PacketCarTelemetryData, error) {
 	if len(data) != packetCarTelemetryDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetCarTelemetryDataLength, len(data))
 	}
+
+	// 1276 bytes in total
+	var carTelemetryData [22]CarTelemetryData
+	for i := 0; i < 22; i++ {
+		startIndex := 0 + (i * carTelemetryDataLength)
+		endIndex := startIndex + carTelemetryDataLength
+
+		payload, _ := ToCarTelemetryData(data[startIndex:endIndex])
+		carTelemetryData[i] = *payload
+	}
+
 	packet := &PacketCarTelemetryData{
-		Header: header,
+		Header:                       header,
+		CarTelemetryData:             carTelemetryData,
+		ButtonStatus:                 binary.LittleEndian.Uint32(data[1276:1280]),
+		MfdPanelIndex:                uint8(data[1280]),
+		MfdPanelIndexSecondaryPlayer: uint8(data[1281]),
+		SuggestedGear:                int8(data[1282]),
 	}
 	return packet, nil
 }
