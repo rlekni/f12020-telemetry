@@ -206,7 +206,7 @@ type PacketLapData struct {
 // The event details packet is different for each type of event.
 // Make sure only the correct type is interpreted.
 // TODO
-type EventDataDetails interface{}
+// type EventDataDetails interface{}
 
 // FastestLap Event on fastest lap
 type FastestLap struct {
@@ -255,7 +255,7 @@ type PacketEventData struct {
 	// for each type
 	EventStringCode string
 
-	EventDetails EventDataDetails
+	// EventDetails EventDataDetails
 }
 
 // Participants Packet
