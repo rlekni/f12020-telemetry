@@ -475,7 +475,7 @@ type FinalClassificationData struct {
 	// 6 = retired
 	ResultStatus     uint8
 	BestLapTime      float32  // Best lap time of the session in seconds
-	TotalRaceTime    float32  // Total race time in seconds without penalties
+	TotalRaceTime    float64  // Total race time in seconds without penalties
 	PenaltiesTime    uint8    // Total penalties accumulated in seconds
 	NumPenalties     uint8    // Number of penalties applied to this driver
 	NumTyreStints    uint8    // Number of tyres stints up to maximum

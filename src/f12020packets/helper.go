@@ -19,30 +19,32 @@ const (
 	packetFinalClassificationDataLength = 839 - packetHeaderLength
 	packetLobbyInfoDataLength           = 1169 - packetHeaderLength
 
-	carMotionDataLength         = 60
-	marshalZoneLength           = 5
-	weatherForecastSampleLength = 5
-	lapDataLength               = 53
-	fastestLapLength            = 5
-	retirementLength            = 1
-	teamMateInPitsLength        = 1
-	raceWinnerLength            = 1
-	penaltyLength               = 7
-	speedTrapLength             = 5
-	participantDataLength       = 54
-	carSetupDataLength          = 49
-	carTelemetryDataLength      = 58
-	carStatusDataLength         = 60
+	carMotionDataLength           = 60
+	marshalZoneLength             = 5
+	weatherForecastSampleLength   = 5
+	lapDataLength                 = 53
+	fastestLapLength              = 5
+	retirementLength              = 1
+	teamMateInPitsLength          = 1
+	raceWinnerLength              = 1
+	penaltyLength                 = 7
+	speedTrapLength               = 5
+	participantDataLength         = 54
+	carSetupDataLength            = 49
+	carTelemetryDataLength        = 58
+	carStatusDataLength           = 60
+	finalClassificationDataLength = 37
 )
 
 /*
 	TODO: Look into gob decoding instead
 */
 func convertToFloat32(data []byte) float32 {
-	// if len(data) > 4 {
-	// 	return 0, fmt.Errorf("Wrong size data provided, expected %d was %d", 4, len(data))
-	// }
 	return math.Float32frombits(binary.LittleEndian.Uint32(data))
+}
+
+func convertToFloat64(data []byte) float64 {
+	return math.Float64frombits(binary.LittleEndian.Uint64(data))
 }
 
 func convertTo4LengthFloat32Array(data []byte) [4]float32 {
@@ -82,7 +84,15 @@ func convertTo4LengthUint8Array(data []byte) [4]uint8 {
 	return result
 }
 
-// 23 bytes
+func convertTo8LengthUint8Array(data []byte) [8]uint8 {
+	var result [8]uint8
+	for i := 0; i < 4; i++ {
+		result[i] = uint8(data[i])
+	}
+	return result
+}
+
+// 24 bytes
 func ToPacketHeader(data []byte) (*PacketHeader, error) {
 	if len(data) != packetHeaderLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetHeaderLength, len(data))
@@ -616,13 +626,49 @@ func ToPacketCarStatusData(data []byte, header *PacketHeader) (*PacketCarStatusD
 	return packet, nil
 }
 
+func ToFinalClassificationData(data []byte) (*FinalClassificationData, error) {
+	if len(data) != finalClassificationDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", finalClassificationDataLength, len(data))
+	}
+
+	finalClassificationData := &FinalClassificationData{
+		Position:         uint8(data[0]),
+		NumLaps:          uint8(data[1]),
+		GridPosition:     uint8(data[2]),
+		Points:           uint8(data[3]),
+		NumPitStops:      uint8(data[4]),
+		ResultStatus:     uint8(data[5]),
+		BestLapTime:      convertToFloat32(data[6:10]),
+		TotalRaceTime:    convertToFloat64(data[10:18]),
+		PenaltiesTime:    uint8(data[18]),
+		NumPenalties:     uint8(data[19]),
+		NumTyreStints:    uint8(data[20]),
+		TyreStintsActual: convertTo8LengthUint8Array(data[21:29]),
+		TyreStintsVisual: convertTo8LengthUint8Array(data[29:37]),
+	}
+
+	return finalClassificationData, nil
+}
+
 func ToPacketFinalClassificationData(data []byte, header *PacketHeader) (*PacketFinalClassificationData, error) {
 	if len(data) != packetFinalClassificationDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetFinalClassificationDataLength, len(data))
 	}
 
+	// 814 bytes in total
+	var finalClassificationData [22]FinalClassificationData
+	for i := 0; i < 22; i++ {
+		startIndex := 1 + (i * finalClassificationDataLength)
+		endIndex := startIndex + finalClassificationDataLength
+
+		payload, _ := ToFinalClassificationData(data[startIndex:endIndex])
+		finalClassificationData[i] = *payload
+	}
+
 	packet := &PacketFinalClassificationData{
-		Header: header,
+		Header:             header,
+		NumCars:            uint8(data[0]),
+		ClassificationData: finalClassificationData,
 	}
 	return packet, nil
 }
