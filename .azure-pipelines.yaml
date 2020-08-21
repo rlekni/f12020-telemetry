@@ -1,0 +1,22 @@
+trigger:
+  branches:
+    exclude:
+      - master
+
+stages:
+- stage: Build
+  displayName: Docker build
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build docker image
+      inputs:
+        command: build
+        dockerfile: src/Dockerfile
+        tags: |
+          $(Build.BuildId)
+          latest

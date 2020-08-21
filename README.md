@@ -1,5 +1,7 @@
 # go-f1-telemetry
 
+[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=serialisation)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=serialisation)
+
 ## F1 2020
 
 Telemetry specification [found here](https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/)
@@ -45,3 +47,28 @@ The packets IDs are as follows:
 | Race Winner          | “RCWN” | The race winner is announced                   |
 | Penalty Issued       | “PENA” | A penalty has been issued – details in event   |
 | Speed Trap Triggered | “SPTP” | Speed trap has been triggered by fastest speed |
+
+### Main packets
+
+| Packet Name                   | Size in bytes | Frequency                       |
+| ----------------------------- | ------------- | ------------------------------- |
+| PacketMotionData              | 1464          | Rate in menus (20 Hz)           |
+| PacketSessionData             | 251           | 2 per second                    |
+| PacketLapData                 | 1190          | Rate in menus (20 Hz)           |
+| PacketEventData               | 35            | When even occurs                |
+| PacketParticipantsData        | 1213          | Every 5 seconds                 |
+| PacketCarSetupData            | 1102          | 2 per second                    |
+| PacketCarTelemetryData        | 1307          | Rate in menus (20 Hz)           |
+| PacketCarStatusData           | 1344          | Rate in menus (20 Hz)           |
+| PacketFinalClassificationData | 839           | Once at the end of a race       |
+| PacketLobbyInfoData           | 1169          | 2 per second, when in the lobby |
+
+## Mongo
+
+Setup:
+
+* `sudo mkdir -p /mongodata`
+* `sudo docker run -it -v /data/db:/mongodata -p 27017:27017 --name mongodb -d mongo`
+* `sudo docker start mongodb`
+
+To access the databases, download mongo compass
