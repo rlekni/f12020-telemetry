@@ -32,6 +32,7 @@ const (
 	participantDataLength       = 54
 	carSetupDataLength          = 49
 	carTelemetryDataLength      = 58
+	carStatusDataLength         = 60
 )
 
 /*
@@ -552,12 +553,65 @@ func ToPacketCarTelemetryData(data []byte, header *PacketHeader) (*PacketCarTele
 	return packet, nil
 }
 
+func ToCarStatusData(data []byte) (*CarStatusData, error) {
+	if len(data) != carStatusDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carStatusDataLength, len(data))
+	}
+
+	carStatusData := &CarStatusData{
+		TractionControl:         uint8(data[0]),
+		AntiLockBrakes:          uint8(data[1]),
+		FuelMix:                 uint8(data[2]),
+		FrontBrakeBias:          uint8(data[3]),
+		PitLimiterStatus:        uint8(data[4]),
+		FuelInTank:              convertToFloat32(data[5:9]),
+		FuelCapacity:            convertToFloat32(data[9:13]),
+		FuelRemainingLaps:       convertToFloat32(data[13:17]),
+		MaxRPM:                  binary.LittleEndian.Uint16(data[17:19]),
+		IdleRPM:                 binary.LittleEndian.Uint16(data[19:21]),
+		MaxGears:                uint8(data[21]),
+		DrsAllowed:              uint8(data[22]),
+		DrsActivationDistance:   binary.LittleEndian.Uint16(data[23:25]),
+		TyresWear:               convertTo4LengthUint8Array(data[25:29]),
+		ActualTyreCompound:      uint8(data[29]),
+		VisualTyreCompound:      uint8(data[30]),
+		TyresAgeLaps:            uint8(data[31]),
+		TyresDamage:             convertTo4LengthUint8Array(data[32:36]),
+		FrontLeftWingDamage:     uint8(data[36]),
+		FrontRightWingDamage:    uint8(data[37]),
+		RearWingDamage:          uint8(data[38]),
+		DrsFault:                uint8(data[39]),
+		EngineDamage:            uint8(data[40]),
+		GearBoxDamage:           uint8(data[41]),
+		VehicleFiaFlags:         int8(data[42]),
+		ErsStoreEnergy:          convertToFloat32(data[43:47]),
+		ErsDeployMode:           uint8(data[47]),
+		ErsHarvestedThisLapMGUK: convertToFloat32(data[48:52]),
+		ErsHarvestedThisLapMGUH: convertToFloat32(data[52:56]),
+		ErsDeployedThisLap:      convertToFloat32(data[56:60]),
+	}
+
+	return carStatusData, nil
+}
+
 func ToPacketCarStatusData(data []byte, header *PacketHeader) (*PacketCarStatusData, error) {
 	if len(data) != packetCarStatusDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetCarStatusDataLength, len(data))
 	}
+
+	// 1320 bytes in total
+	var carStatusData [22]CarStatusData
+	for i := 0; i < 22; i++ {
+		startIndex := 0 + (i * carStatusDataLength)
+		endIndex := startIndex + carStatusDataLength
+
+		payload, _ := ToCarStatusData(data[startIndex:endIndex])
+		carStatusData[i] = *payload
+	}
+
 	packet := &PacketCarStatusData{
-		Header: header,
+		Header:        header,
+		CarStatusData: carStatusData,
 	}
 	return packet, nil
 }
