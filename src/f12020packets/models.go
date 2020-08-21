@@ -506,8 +506,8 @@ type LobbyInfoData struct {
 	// Name of participant in UTF-8 format – null terminated
 	// Will be truncated with ... (U+2026) if too long
 	Nationality uint8
-	Name        string
-	ReadyStatus uint8 // 0 = not ready, 1 = ready, 2 = spectating
+	Name        string // 48 bytes
+	ReadyStatus uint8  // 0 = not ready, 1 = ready, 2 = spectating
 }
 
 // PacketLobbyInfoData packet construct for lobby information

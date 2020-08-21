@@ -34,6 +34,7 @@ const (
 	carTelemetryDataLength        = 58
 	carStatusDataLength           = 60
 	finalClassificationDataLength = 37
+	lobbyInfoDataLength           = 52
 )
 
 /*
@@ -673,13 +674,41 @@ func ToPacketFinalClassificationData(data []byte, header *PacketHeader) (*Packet
 	return packet, nil
 }
 
+func ToLobbyInfoData(data []byte) (*LobbyInfoData, error) {
+	if len(data) != lobbyInfoDataLength {
+		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", lobbyInfoDataLength, len(data))
+	}
+
+	lobbyInfoData := &LobbyInfoData{
+		AiControlled: uint8(data[0]),
+		TeamID:       uint8(data[1]),
+		Nationality:  uint8(data[2]),
+		Name:         string(data[3:51]),
+		ReadyStatus:  uint8(data[52]),
+	}
+
+	return lobbyInfoData, nil
+}
+
 func ToPacketLobbyInfoData(data []byte, header *PacketHeader) (*PacketLobbyInfoData, error) {
 	if len(data) != packetLobbyInfoDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetLobbyInfoDataLength, len(data))
 	}
 
+	// 1144 bytes in total
+	var lobbyInfoData [22]LobbyInfoData
+	for i := 0; i < 22; i++ {
+		startIndex := 1 + (i * finalClassificationDataLength)
+		endIndex := startIndex + finalClassificationDataLength
+
+		payload, _ := ToLobbyInfoData(data[startIndex:endIndex])
+		lobbyInfoData[i] = *payload
+	}
+
 	packet := &PacketLobbyInfoData{
-		Header: header,
+		Header:       header,
+		NumPlayers:   uint8(data[0]),
+		LobbyPlayers: lobbyInfoData,
 	}
 	return packet, nil
 }
