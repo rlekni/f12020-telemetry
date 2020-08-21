@@ -104,7 +104,7 @@ func ToPacketHeader(data []byte) (*PacketHeader, error) {
 		GameMinorVersion:        uint8(data[3]),
 		PacketVersion:           uint8(data[4]),
 		PacketID:                uint8(data[5]),
-		SessionUID:              binary.LittleEndian.Uint64(data[6:14]),
+		SessionUID:              string(binary.LittleEndian.Uint64(data[6:14])),
 		SessionTime:             convertToFloat32(data[14:18]),
 		FrameIdentifier:         binary.LittleEndian.Uint32(data[18:22]),
 		PlayerCarIndex:          uint8(22),
@@ -274,7 +274,7 @@ func ToLapData(data []byte) (*LapData, error) {
 		LastLapTime:                convertToFloat32(data[0:4]),
 		CurrentLapTime:             convertToFloat32(data[4:8]),
 		Sector1TimeInMS:            binary.LittleEndian.Uint16(data[8:10]),
-		Sector2TimeInMS:            binary.BigEndian.Uint16(data[10:12]),
+		Sector2TimeInMS:            binary.LittleEndian.Uint16(data[10:12]),
 		BestLapTime:                convertToFloat32(data[12:16]),
 		BestLapNum:                 uint8(data[16]),
 		BestLapSector1TimeInMS:     binary.LittleEndian.Uint16(data[17:19]),
@@ -285,19 +285,19 @@ func ToLapData(data []byte) (*LapData, error) {
 		BestOverallSector2TimeInMS: binary.LittleEndian.Uint16(data[26:28]),
 		BestOverallSector2LapNum:   uint8(data[28]),
 		BestOverallSector3TimeInMS: binary.LittleEndian.Uint16(data[29:31]),
-		BestOverallSector3LapNum:   uint8(data[32]),
-		LapDistance:                convertToFloat32(data[33:37]),
-		TotalDistance:              convertToFloat32(data[37:41]),
-		SafetyCarDelta:             convertToFloat32(data[41:45]),
-		CarPosition:                uint8(data[45]),
-		CurrentLapNum:              uint8(data[46]),
-		PitStatus:                  uint8(data[47]),
-		Sector:                     uint8(data[48]),
-		CurrentLapInvalid:          uint8(data[49]),
-		Penalties:                  uint8(data[50]),
-		GridPosition:               uint8(data[51]),
-		DriverStatus:               uint8(data[52]),
-		ResultStatus:               uint8(data[53]),
+		BestOverallSector3LapNum:   uint8(data[31]),
+		LapDistance:                convertToFloat32(data[32:36]),
+		TotalDistance:              convertToFloat32(data[36:40]),
+		SafetyCarDelta:             convertToFloat32(data[40:44]),
+		CarPosition:                uint8(data[44]),
+		CurrentLapNum:              uint8(data[45]),
+		PitStatus:                  uint8(data[46]),
+		Sector:                     uint8(data[47]),
+		CurrentLapInvalid:          uint8(data[48]),
+		Penalties:                  uint8(data[49]),
+		GridPosition:               uint8(data[50]),
+		DriverStatus:               uint8(data[51]),
+		ResultStatus:               uint8(data[52]),
 	}
 
 	return lapData, nil
@@ -429,7 +429,7 @@ func ToParticipantData(data []byte) (*ParticipantData, error) {
 		RaceNumber:    uint8(data[3]),
 		Nationality:   uint8(data[4]),
 		Name:          string(data[5:53]),
-		YourTelemetry: uint8(data[54]),
+		YourTelemetry: uint8(data[53]),
 	}
 
 	return participantData, nil
@@ -445,7 +445,6 @@ func ToPacketParticipantsData(data []byte, header *PacketHeader) (*PacketPartici
 	for i := 0; i < 22; i++ {
 		startIndex := 1 + (i * participantDataLength)
 		endIndex := startIndex + participantDataLength
-
 		payload, _ := ToParticipantData(data[startIndex:endIndex])
 		participantData[i] = *payload
 	}

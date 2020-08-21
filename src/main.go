@@ -7,7 +7,6 @@ import (
 	"main/f12020packets"
 	"net"
 	"os"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -67,18 +66,8 @@ func deserialisePacket(ctx context.Context, mongoDatabase *mongo.Database, data 
 	case 0:
 		fmt.Print("Deserialising PacketMotionData")
 		packet, _ := f12020packets.ToPacketMotionData(data[24:1464], header)
-		// json, _ := json.Marshal(packet)
-		// fmt.Println(string(json))
 		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
 		insertDocument(ctx, mongoDatabase, "packetMotionData", packet)
-		// collection := mongoDatabase.Collection("packetMotionData")
-
-		// insertResult, err := collection.InsertOne(ctx, packet)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-
-		// fmt.Println("Inserted a single document: ", insertResult.InsertedID)
 	case 1:
 		fmt.Print("Deserialising PacketSessionData")
 		packet, _ := f12020packets.ToPacketSessionData(data[24:251], header)
@@ -131,7 +120,6 @@ func deserialisePacket(ctx context.Context, mongoDatabase *mongo.Database, data 
 
 func insertDocument(ctx context.Context, mongoDatabase *mongo.Database, collectionName string, packet interface{}) {
 	collection := mongoDatabase.Collection(collectionName)
-
 	insertResult, err := collection.InsertOne(ctx, packet)
 	if err != nil {
 		log.Fatal(err)
@@ -141,20 +129,16 @@ func insertDocument(ctx context.Context, mongoDatabase *mongo.Database, collecti
 }
 
 func newMongoDBConnection() (*mongo.Client, context.Context) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+	ctx := context.Background()
 
-	username := os.Getenv("MONGO_USERNAME")
-	password := os.Getenv("MONGO_PASSWORD")
-	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@planner-core-test-free.tlrom.azure.mongodb.net?retryWrites=true&w=majority", username, password)
+	username := "telemetry_user"
+	password := ""
+	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@planner-core-test-free.tlrom.azure.mongodb.net/f12020telemetry?retryWrites=true&w=majority", username, password)
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
 
 	// Connect to MongoDB
-	// client, err := mongo.Connect(context.TODO(), clientOptions)
 	client, err := mongo.Connect(ctx, clientOptions)
-
-	defer client.Disconnect(ctx)
 
 	if err != nil {
 		log.Fatal(err)
