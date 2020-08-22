@@ -82,7 +82,7 @@ func deserialisePacket(ctx context.Context, mongoDatabase *mongo.Database, data 
 		if err != nil {
 			logrus.Errorln(err)
 		}
-		insertDocument(ctx, mongoDatabase, "packetMotionData", packet)
+		insertDocument(ctx, mongoDatabase, "packetSessionData", packet)
 	case 2:
 		logrus.Infoln("Decoding PacketLapData")
 		packet, err := f12020packets.ToPacketLapData(data[24:1190], header)
@@ -158,7 +158,7 @@ func newMongoDBConnection() (*mongo.Client, context.Context) {
 	ctx := context.Background()
 
 	username := "telemetry_user"
-	password := "9elpSJFCRvDY8Rcl"
+	password := ""
 	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@planner-core-test-free.tlrom.azure.mongodb.net/f12020telemetry?retryWrites=true&w=majority", username, password)
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)

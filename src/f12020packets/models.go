@@ -202,12 +202,6 @@ type PacketLapData struct {
 // Size: 35 bytes (Packet size updated in Beta 3)
 // Version: 1
 
-// EventDataDetails Stub interface for Event data details
-// The event details packet is different for each type of event.
-// Make sure only the correct type is interpreted.
-// TODO
-// type EventDataDetails interface{}
-
 // FastestLap Event on fastest lap
 type FastestLap struct {
 	VehicleIdx uint8   // Vehicle index of car achieving fastest lap
@@ -255,7 +249,7 @@ type PacketEventData struct {
 	// for each type
 	EventStringCode string
 
-	// EventDetails EventDataDetails
+	EventDetails interface{}
 }
 
 // Participants Packet

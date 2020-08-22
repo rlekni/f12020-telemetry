@@ -340,9 +340,10 @@ func ToPacketLapData(data []byte, header *PacketHeader) (*PacketLapData, error) 
 	return packet, nil
 }
 
-func ToFastestLap(data []byte) (*FastestLap, error) {
+func ToFastestLap(data []byte) *FastestLap {
 	if len(data) != fastestLapLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", fastestLapLength, len(data))
+		logrus.Errorf("Expected provided data to be %d length, but was %d", fastestLapLength, len(data))
+		return nil
 	}
 
 	fastestLap := &FastestLap{
@@ -350,48 +351,37 @@ func ToFastestLap(data []byte) (*FastestLap, error) {
 		LapTime:    convertToFloat32(data[1:5]),
 	}
 
-	return fastestLap, nil
+	return fastestLap
 }
 
-func ToRetirement(data []byte) (*Retirement, error) {
-	if len(data) != retirementLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", retirementLength, len(data))
-	}
-
+func ToRetirement(data byte) *Retirement {
 	retirement := &Retirement{
-		VehicleIdx: uint8(data[0]),
+		VehicleIdx: uint8(data),
 	}
 
-	return retirement, nil
+	return retirement
 }
 
-func ToTeamMateInPits(data []byte) (*TeamMateInPits, error) {
-	if len(data) != teamMateInPitsLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", teamMateInPitsLength, len(data))
-	}
-
+func ToTeamMateInPits(data byte) *TeamMateInPits {
 	teamMateInPits := &TeamMateInPits{
-		VehicleIdx: uint8(data[0]),
+		VehicleIdx: uint8(data),
 	}
 
-	return teamMateInPits, nil
+	return teamMateInPits
 }
 
-func ToRaceWinner(data []byte) (*RaceWinner, error) {
-	if len(data) != raceWinnerLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", raceWinnerLength, len(data))
-	}
-
+func ToRaceWinner(data byte) *RaceWinner {
 	raceWinner := &RaceWinner{
-		VehicleIdx: uint8(data[0]),
+		VehicleIdx: uint8(data),
 	}
 
-	return raceWinner, nil
+	return raceWinner
 }
 
-func ToPenalty(data []byte) (*Penalty, error) {
+func ToPenalty(data []byte) *Penalty {
 	if len(data) != penaltyLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", penaltyLength, len(data))
+		logrus.Errorf("Expected provided data to be %d length, but was %d", penaltyLength, len(data))
+		return nil
 	}
 
 	penalty := &Penalty{
@@ -404,12 +394,13 @@ func ToPenalty(data []byte) (*Penalty, error) {
 		PlacesGained:     uint8(data[6]),
 	}
 
-	return penalty, nil
+	return penalty
 }
 
-func ToSpeedTrap(data []byte) (*SpeedTrap, error) {
+func ToSpeedTrap(data []byte) *SpeedTrap {
 	if len(data) != speedTrapLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", speedTrapLength, len(data))
+		logrus.Errorf("Expected provided data to be %d length, but was %d", speedTrapLength, len(data))
+		return nil
 	}
 
 	speedTrap := &SpeedTrap{
@@ -417,16 +408,37 @@ func ToSpeedTrap(data []byte) (*SpeedTrap, error) {
 		Speed:      convertToFloat32(data[1:5]),
 	}
 
-	return speedTrap, nil
+	return speedTrap
 }
 
 func ToPacketEventData(data []byte, header *PacketHeader) (*PacketEventData, error) {
 	if len(data) != packetEventDataLength {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetEventDataLength, len(data))
 	}
+	eventCode := string(data[0:4])
+
+	var eventDetailsData interface{}
+	switch eventCode {
+	case "FTLP":
+		eventDetailsData = ToFastestLap(data[4:9])
+	case "RTMT":
+		eventDetailsData = ToRetirement(data[4])
+	case "TMPT":
+		eventDetailsData = ToTeamMateInPits(data[4])
+	case "RCWN":
+		eventDetailsData = ToRaceWinner(data[4])
+	case "PENA":
+		eventDetailsData = ToPenalty(data[4:11])
+	case "SPTP":
+		eventDetailsData = ToSpeedTrap(data[4:9])
+	default:
+		logrus.Warningf("None of the event Codes matched event code supplied: %q.", eventCode)
+	}
+
 	packet := &PacketEventData{
 		Header:          header,
-		EventStringCode: string(data[0:4]),
+		EventStringCode: eventCode,
+		EventDetails:    eventDetailsData,
 	}
 
 	return packet, nil
