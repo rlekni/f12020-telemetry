@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 )
@@ -106,7 +107,7 @@ func ToPacketHeader(data []byte) (*PacketHeader, error) {
 		GameMinorVersion:        uint8(data[3]),
 		PacketVersion:           uint8(data[4]),
 		PacketID:                uint8(data[5]),
-		SessionUID:              string(binary.LittleEndian.Uint64(data[6:14])),
+		SessionUID:              strconv.FormatUint(binary.LittleEndian.Uint64(data[6:14]), 10),
 		SessionTime:             convertToFloat32(data[14:18]),
 		FrameIdentifier:         binary.LittleEndian.Uint32(data[18:22]),
 		PlayerCarIndex:          uint8(22),

@@ -66,6 +66,7 @@ func deserialisePacket(ctx context.Context, mongoDatabase *mongo.Database, data 
 		logrus.Errorf("Failed to decode Packet Header. Error: %q", err)
 	}
 
+	logrus.Infoln("SessionID: ", header.SessionUID)
 	logrus.Infof("Data length: %d, PacketID: %d\n", len(data), header.PacketID)
 	switch header.PacketID {
 	case 0:
@@ -157,7 +158,7 @@ func newMongoDBConnection() (*mongo.Client, context.Context) {
 	ctx := context.Background()
 
 	username := "telemetry_user"
-	password := ""
+	password := "9elpSJFCRvDY8Rcl"
 	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@planner-core-test-free.tlrom.azure.mongodb.net/f12020telemetry?retryWrites=true&w=majority", username, password)
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
