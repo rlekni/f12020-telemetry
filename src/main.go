@@ -3,35 +3,40 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"main/f12020packets"
 	"net"
 	"os"
+	"time"
+
+	"github.com/snowzach/rotatefilehook"
+
+	"github.com/mattn/go-colorable"
+	"github.com/sirupsen/logrus"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func main() {
+	initLogger()
 	arguments := os.Args
 	portInput := "20777"
 	if len(arguments) == 1 {
-		fmt.Println("NOTE: port number not provided, defaulting to 20777")
+		logrus.Infoln("NOTE: port number not provided, defaulting to 20777")
 	} else {
 		portInput = arguments[1]
 	}
 	PORT := ":" + portInput
 
-	// connection, err := net.ListenPacket("udp4", ":20777")
 	s, err := net.ResolveUDPAddr("udp4", PORT)
 	if err != nil {
-		fmt.Println(err)
+		logrus.Errorln(err)
 		return
 	}
 
 	connection, err := net.ListenUDP("udp4", s)
 	if err != nil {
-		fmt.Println(err)
+		logrus.Errorln(err)
 		return
 	}
 
@@ -44,11 +49,11 @@ func main() {
 	for {
 		n, addr, err := connection.ReadFromUDP(buffer)
 		if err != nil {
-			fmt.Println(err)
-			// Log
+			logrus.Errorln(err)
 			continue
 		}
-		fmt.Print("-> ", addr)
+
+		logrus.Info("-> ", addr)
 		data := buffer[0:n]
 
 		deserialisePacket(ctx, mongoDatabase, data)
@@ -58,63 +63,83 @@ func main() {
 func deserialisePacket(ctx context.Context, mongoDatabase *mongo.Database, data []byte) {
 	header, err := f12020packets.ToPacketHeader(data[0:24])
 	if err != nil {
-		fmt.Printf("Failed to deserialise to Packet Header")
+		logrus.Errorf("Failed to decode Packet Header. Error: %q", err)
 	}
 
-	fmt.Printf(" Data length: %d, PacketID: %d\n", len(data), header.PacketID)
+	logrus.Infof("Data length: %d, PacketID: %d\n", len(data), header.PacketID)
 	switch header.PacketID {
 	case 0:
-		fmt.Print("Deserialising PacketMotionData")
-		packet, _ := f12020packets.ToPacketMotionData(data[24:1464], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketMotionData")
+		packet, err := f12020packets.ToPacketMotionData(data[24:1464], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetMotionData", packet)
 	case 1:
-		fmt.Print("Deserialising PacketSessionData")
-		packet, _ := f12020packets.ToPacketSessionData(data[24:251], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketSessionData")
+		packet, err := f12020packets.ToPacketSessionData(data[24:251], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetMotionData", packet)
 	case 2:
-		fmt.Print("Deserialising PacketLapData")
-		packet, _ := f12020packets.ToPacketLapData(data[24:1190], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketLapData")
+		packet, err := f12020packets.ToPacketLapData(data[24:1190], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetLapData", packet)
 	case 3:
-		fmt.Print("Deserialising PacketEventData")
-		packet, _ := f12020packets.ToPacketEventData(data[24:35], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketEventData")
+		packet, err := f12020packets.ToPacketEventData(data[24:35], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetEventData", packet)
 	case 4:
-		fmt.Print("Deserialising PacketParticipantsData")
-		packet, _ := f12020packets.ToPacketParticipantsData(data[24:1213], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketParticipantsData")
+		packet, err := f12020packets.ToPacketParticipantsData(data[24:1213], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetParticipantsData", packet)
 	case 5:
-		fmt.Print("Deserialising PacketCarSetupData")
-		packet, _ := f12020packets.ToPacketCarSetupData(data[24:1102], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketCarSetupData")
+		packet, err := f12020packets.ToPacketCarSetupData(data[24:1102], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetCarSetupData", packet)
 	case 6:
-		fmt.Print("Deserialising PacketCarTelemetryData")
-		packet, _ := f12020packets.ToPacketCarTelemetryData(data[24:1307], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketCarTelemetryData")
+		packet, err := f12020packets.ToPacketCarTelemetryData(data[24:1307], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetCarTelemetryData", packet)
 	case 7:
-		fmt.Print("Deserialising PacketCarStatusData")
-		packet, _ := f12020packets.ToPacketCarStatusData(data[24:1344], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketCarStatusData")
+		packet, err := f12020packets.ToPacketCarStatusData(data[24:1344], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetCarStatusData", packet)
 	case 8:
-		fmt.Print("Deserialising PacketFinalClassificationData")
-		packet, _ := f12020packets.ToPacketFinalClassificationData(data[24:839], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketFinalClassificationData")
+		packet, err := f12020packets.ToPacketFinalClassificationData(data[24:839], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetFinalClassificationData", packet)
 	case 9:
-		fmt.Print("Deserialising PacketLobbyInfoData")
-		packet, _ := f12020packets.ToPacketLobbyInfoData(data[24:1169], header)
-		fmt.Printf(" Packet: %d, %d.%d\n", packet.Header.PacketFormat, packet.Header.GameMajorVersion, packet.Header.GameMinorVersion)
+		logrus.Infoln("Decoding PacketLobbyInfoData")
+		packet, err := f12020packets.ToPacketLobbyInfoData(data[24:1169], header)
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		insertDocument(ctx, mongoDatabase, "packetLobbyInfoData", packet)
 	default:
-		fmt.Printf("None of the defined PacketIDs matched. Data length: %d, PacketID: %d\n", len(data), header.PacketID)
+		logrus.Warningf("None of the defined PacketIDs matched. Data length: %d, PacketID: %d\n", len(data), header.PacketID)
 	}
 }
 
@@ -122,10 +147,10 @@ func insertDocument(ctx context.Context, mongoDatabase *mongo.Database, collecti
 	collection := mongoDatabase.Collection(collectionName)
 	insertResult, err := collection.InsertOne(ctx, packet)
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 
-	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
+	logrus.Infoln("Inserted a single document: ", insertResult.InsertedID)
 }
 
 func newMongoDBConnection() (*mongo.Client, context.Context) {
@@ -141,16 +166,45 @@ func newMongoDBConnection() (*mongo.Client, context.Context) {
 	client, err := mongo.Connect(ctx, clientOptions)
 
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 
 	// Check the connection
 	err = client.Ping(ctx, nil)
 
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 
-	fmt.Println("Connected to MongoDB!")
+	logrus.Infoln("Connected to MongoDB!")
 	return client, ctx
+}
+
+// Solution from https://github.com/sirupsen/logrus/issues/784#issuecomment-403765306
+func initLogger() {
+	var logLevel = logrus.InfoLevel
+
+	rotateFileHook, err := rotatefilehook.NewRotateFileHook(rotatefilehook.RotateFileConfig{
+		Filename:   "logs/console.log",
+		MaxSize:    50,
+		MaxBackups: 3,
+		MaxAge:     28,
+		Level:      logLevel,
+		Formatter: &logrus.JSONFormatter{
+			TimestampFormat: time.RFC822,
+		},
+	})
+
+	if err != nil {
+		logrus.Fatalf("Failed to initialize file rotate hook: %v", err)
+	}
+
+	logrus.SetLevel(logLevel)
+	logrus.SetOutput(colorable.NewColorableStdout())
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: time.RFC822,
+	})
+	logrus.AddHook(rotateFileHook)
 }

@@ -4,6 +4,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -158,7 +160,10 @@ func ToPacketMotionData(data []byte, header *PacketHeader) (*PacketMotionData, e
 		startIndex := 0 + (i * carMotionDataLength)
 		endIndex := startIndex + carMotionDataLength
 		// Swallow any exceptions for now
-		payload, _ := ToCarMotionData(data[startIndex:endIndex])
+		payload, err := ToCarMotionData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		motionData[i] = *payload
 	}
 
@@ -224,7 +229,10 @@ func ToPacketSessionData(data []byte, header *PacketHeader) (*PacketSessionData,
 		startIndex := 19 + (i * marshalZoneLength)
 		endIndex := startIndex + marshalZoneLength
 
-		payload, _ := ToMarshalZone(data[startIndex:endIndex])
+		payload, err := ToMarshalZone(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		marshalZones[i] = *payload
 	}
 
@@ -234,7 +242,10 @@ func ToPacketSessionData(data []byte, header *PacketHeader) (*PacketSessionData,
 		startIndex := 127 + (i * weatherForecastSampleLength)
 		endIndex := startIndex + weatherForecastSampleLength
 
-		payload, _ := ToWeatherForecastSample(data[startIndex:endIndex])
+		payload, err := ToWeatherForecastSample(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		weatherForecastSamples[i] = *payload
 	}
 
@@ -314,7 +325,10 @@ func ToPacketLapData(data []byte, header *PacketHeader) (*PacketLapData, error) 
 		startIndex := 0 + (i * lapDataLength)
 		endIndex := startIndex + lapDataLength
 
-		payload, _ := ToLapData(data[startIndex:endIndex])
+		payload, err := ToLapData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		lapDatas[i] = *payload
 	}
 
@@ -445,7 +459,10 @@ func ToPacketParticipantsData(data []byte, header *PacketHeader) (*PacketPartici
 	for i := 0; i < 22; i++ {
 		startIndex := 1 + (i * participantDataLength)
 		endIndex := startIndex + participantDataLength
-		payload, _ := ToParticipantData(data[startIndex:endIndex])
+		payload, err := ToParticipantData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		participantData[i] = *payload
 	}
 
@@ -501,7 +518,10 @@ func ToPacketCarSetupData(data []byte, header *PacketHeader) (*PacketCarSetupDat
 		startIndex := 0 + (i * carSetupDataLength)
 		endIndex := startIndex + carSetupDataLength
 
-		payload, _ := ToCarSetupData(data[startIndex:endIndex])
+		payload, err := ToCarSetupData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		carSetupData[i] = *payload
 	}
 
@@ -548,7 +568,10 @@ func ToPacketCarTelemetryData(data []byte, header *PacketHeader) (*PacketCarTele
 		startIndex := 0 + (i * carTelemetryDataLength)
 		endIndex := startIndex + carTelemetryDataLength
 
-		payload, _ := ToCarTelemetryData(data[startIndex:endIndex])
+		payload, err := ToCarTelemetryData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		carTelemetryData[i] = *payload
 	}
 
@@ -615,7 +638,10 @@ func ToPacketCarStatusData(data []byte, header *PacketHeader) (*PacketCarStatusD
 		startIndex := 0 + (i * carStatusDataLength)
 		endIndex := startIndex + carStatusDataLength
 
-		payload, _ := ToCarStatusData(data[startIndex:endIndex])
+		payload, err := ToCarStatusData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		carStatusData[i] = *payload
 	}
 
@@ -661,7 +687,10 @@ func ToPacketFinalClassificationData(data []byte, header *PacketHeader) (*Packet
 		startIndex := 1 + (i * finalClassificationDataLength)
 		endIndex := startIndex + finalClassificationDataLength
 
-		payload, _ := ToFinalClassificationData(data[startIndex:endIndex])
+		payload, err := ToFinalClassificationData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		finalClassificationData[i] = *payload
 	}
 
@@ -700,7 +729,10 @@ func ToPacketLobbyInfoData(data []byte, header *PacketHeader) (*PacketLobbyInfoD
 		startIndex := 1 + (i * finalClassificationDataLength)
 		endIndex := startIndex + finalClassificationDataLength
 
-		payload, _ := ToLobbyInfoData(data[startIndex:endIndex])
+		payload, err := ToLobbyInfoData(data[startIndex:endIndex])
+		if err != nil {
+			logrus.Errorln(err)
+		}
 		lobbyInfoData[i] = *payload
 	}
 
