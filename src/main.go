@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"main/f12020packets"
 	"net"
 	"os"
@@ -66,74 +65,74 @@ func deserialisePacket(ctx context.Context, mongoDatabase *mongo.Database, data 
 		logrus.Errorf("Failed to decode Packet Header. Error: %q", err)
 	}
 
-	logrus.Infoln("SessionID: ", header.SessionUID)
-	logrus.Infof("Data length: %d, PacketID: %d\n", len(data), header.PacketID)
+	logrus.Debugln("SessionID: ", header.SessionUID)
+	logrus.Debugf("Data length: %d, PacketID: %d\n", len(data), header.PacketID)
 	switch header.PacketID {
 	case 0:
-		logrus.Infoln("Decoding PacketMotionData")
+		logrus.Debugln("Decoding PacketMotionData")
 		packet, err := f12020packets.ToPacketMotionData(data[24:1464], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetMotionData", packet)
 	case 1:
-		logrus.Infoln("Decoding PacketSessionData")
+		logrus.Debugln("Decoding PacketSessionData")
 		packet, err := f12020packets.ToPacketSessionData(data[24:251], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetSessionData", packet)
 	case 2:
-		logrus.Infoln("Decoding PacketLapData")
+		logrus.Debugln("Decoding PacketLapData")
 		packet, err := f12020packets.ToPacketLapData(data[24:1190], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetLapData", packet)
 	case 3:
-		logrus.Infoln("Decoding PacketEventData")
+		logrus.Debugln("Decoding PacketEventData")
 		packet, err := f12020packets.ToPacketEventData(data[24:35], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetEventData", packet)
 	case 4:
-		logrus.Infoln("Decoding PacketParticipantsData")
+		logrus.Debugln("Decoding PacketParticipantsData")
 		packet, err := f12020packets.ToPacketParticipantsData(data[24:1213], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetParticipantsData", packet)
 	case 5:
-		logrus.Infoln("Decoding PacketCarSetupData")
+		logrus.Debugln("Decoding PacketCarSetupData")
 		packet, err := f12020packets.ToPacketCarSetupData(data[24:1102], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetCarSetupData", packet)
 	case 6:
-		logrus.Infoln("Decoding PacketCarTelemetryData")
+		logrus.Debugln("Decoding PacketCarTelemetryData")
 		packet, err := f12020packets.ToPacketCarTelemetryData(data[24:1307], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetCarTelemetryData", packet)
 	case 7:
-		logrus.Infoln("Decoding PacketCarStatusData")
+		logrus.Debugln("Decoding PacketCarStatusData")
 		packet, err := f12020packets.ToPacketCarStatusData(data[24:1344], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetCarStatusData", packet)
 	case 8:
-		logrus.Infoln("Decoding PacketFinalClassificationData")
+		logrus.Debugln("Decoding PacketFinalClassificationData")
 		packet, err := f12020packets.ToPacketFinalClassificationData(data[24:839], header)
 		if err != nil {
 			logrus.Errorln(err)
 		}
 		insertDocument(ctx, mongoDatabase, "packetFinalClassificationData", packet)
 	case 9:
-		logrus.Infoln("Decoding PacketLobbyInfoData")
+		logrus.Debugln("Decoding PacketLobbyInfoData")
 		packet, err := f12020packets.ToPacketLobbyInfoData(data[24:1169], header)
 		if err != nil {
 			logrus.Errorln(err)
@@ -151,15 +150,16 @@ func insertDocument(ctx context.Context, mongoDatabase *mongo.Database, collecti
 		logrus.Fatal(err)
 	}
 
-	logrus.Infoln("Inserted a single document: ", insertResult.InsertedID)
+	logrus.Debugln("Inserted a single document: ", insertResult.InsertedID)
 }
 
 func newMongoDBConnection() (*mongo.Client, context.Context) {
 	ctx := context.Background()
 
-	username := "telemetry_user"
-	password := ""
-	connectionString := fmt.Sprintf("mongodb+srv://%s:%s@planner-core-test-free.tlrom.azure.mongodb.net/f12020telemetry?retryWrites=true&w=majority", username, password)
+	// username := "telemetry_user"
+	// password := ""
+	// connectionString := fmt.Sprintf("mongodb+srv://%s:%s@test.azure.mongodb.net/f12020telemetry?retryWrites=true&w=majority", username, password)
+	connectionString := "mongodb://localhost:27017/f12020telemetry?retryWrites=true&w=majority"
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
 
