@@ -4,19 +4,35 @@ trigger:
       - master
 
 stages:
-- stage: Build
-  displayName: Docker build
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build docker image
-      inputs:
-        command: build
-        dockerfile: src/Dockerfile
-        tags: |
-          $(Build.BuildId)
-          latest
+  - stage: Build
+    displayName: Docker build
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+        - task: Docker@2
+          displayName: Build docker image
+          inputs:
+            command: build
+            dockerfile: src/udp-server/Dockerfile
+            tags: |
+              $(Build.BuildId)
+              latest
+      - job: Build
+        displayName: Build and push to container registry
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build and push an image to container registry
+            inputs:
+              command: buildAndPush
+              repository: f1-telemetry-udp-server
+              dockerfile: src/udp-server/Dockerfile
+              containerRegistry: plannercore4a1e1161
+              tags: |
+                $(Build.BuildId)
+                latest
