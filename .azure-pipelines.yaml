@@ -20,7 +20,7 @@ stages:
             tags: |
               $(Build.BuildId)
               latest
-      - job: Build
+      - job: buildandpush
         displayName: Build and push to container registry
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         pool:
