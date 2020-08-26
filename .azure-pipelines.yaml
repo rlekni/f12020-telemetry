@@ -7,8 +7,8 @@ stages:
   - stage: Build
     displayName: Docker build
     jobs:
-      - job: Build
-        displayName: Build
+      - job: buildudpserver
+        displayName: build udp server
         pool:
           vmImage: ubuntu-latest
         steps:
@@ -20,8 +20,21 @@ stages:
             tags: |
               $(Build.BuildId)
               latest
-      - job: buildandpush
-        displayName: Build and push to container registry
+      - job: buildwebapp
+        displayName: build web app
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+        - task: Docker@2
+          displayName: Build docker image
+          inputs:
+            command: build
+            dockerfile: src/f1-telemetry-web/Dockerfile
+            tags: |
+              $(Build.BuildId)
+              latest
+      - job: buildandpushudpserver
+        displayName: Build and push udp server
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         pool:
           vmImage: ubuntu-latest
@@ -32,6 +45,22 @@ stages:
               command: buildAndPush
               repository: f1-telemetry-udp-server
               dockerfile: src/udp-server/Dockerfile
+              containerRegistry: plannercore4a1e1161
+              tags: |
+                $(Build.BuildId)
+                latest
+      - job: buildandpushwebapp
+        displayName: Build and push web app
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            displayName: Build and push an image to container registry
+            inputs:
+              command: buildAndPush
+              repository: f1-telemetry-web
+              dockerfile: src/f1-telemetry-web/Dockerfile
               containerRegistry: plannercore4a1e1161
               tags: |
                 $(Build.BuildId)

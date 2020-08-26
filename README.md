@@ -72,3 +72,14 @@ Setup:
 * `sudo docker start mongodb`
 
 To access the databases, download mongo compass
+
+## Docker
+
+To list built images:
+
+* `docker images`
+
+Web:
+
+* `docker build -t f1-telemetry-web .`
+* `docker run -it -p 8080:80 --rm --name f1-telemetry-web f1-telemetry-web`
