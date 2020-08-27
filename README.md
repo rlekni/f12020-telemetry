@@ -71,7 +71,7 @@ Setup:
 * `sudo docker run -it -v /data/db:/mongodata -p 27017:27017 --name mongodb -d mongo`
 * `sudo docker start mongodb`
 
-To access the databases, download mongo compass
+To access the databases, download mongo compass or spin up `mongo-express` which is part of `docker-compose.yaml`.
 
 ## Docker
 
@@ -83,3 +83,8 @@ Web:
 
 * `docker build -t f1-telemetry-web .`
 * `docker run -it -p 8080:80 --rm --name f1-telemetry-web f1-telemetry-web`
+
+Mongo bi connector:
+
+* Dockerfile from [here](https://medium.com/@jchamale.usac/building-a-docker-image-for-mongo-bi-connector-c9872b1821ba)
+* `docker build -t mongobi .`

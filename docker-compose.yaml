@@ -1,0 +1,39 @@
+version: "3.1"
+services:
+  # Add UDP server
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - /data/db:/mongodata
+    ports:
+      - 27017:27017
+    networks:
+      - bridge
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - bridge
+    depends_on:
+      - mongo
+  mongo-bi:
+    image: mongobi # juky/mongobi
+    restart: always
+    volumes:
+      - /home/rambo/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
+      - /home/rambo/mongobi/logs:/logs
+    container_name: mongo-bi
+    hostname: mongo-bi
+    ports:
+      - 3307:3307
+    networks:
+      - bridge
+    depends_on:
+      - mongo
+
+networks:
+  bridge:
+    driver: bridge
