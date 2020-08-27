@@ -75,6 +75,8 @@ To access the databases, download mongo compass or spin up `mongo-express` which
 
 ## Docker
 
+* `sudo docker-compose -f docker-compose.yaml up`
+
 To list built images:
 
 * `docker images`
