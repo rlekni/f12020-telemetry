@@ -79,6 +79,9 @@ Build images and deploy:
 
 * `sudo docker-compose build`
 * `sudo docker-compose up -d`
+* `sudo docker-compose down` to stop and remove all containers
+* `sudo docker-compose stop` will stop containers, but won't remove them
+* `sudo docker-compose start` will start containers again
 
 To list built images:
 
@@ -93,3 +96,7 @@ Mongo bi connector:
 
 * Dockerfile from [here](https://medium.com/@jchamale.usac/building-a-docker-image-for-mongo-bi-connector-c9872b1821ba)
 * `docker build -t mongobi .`
+
+UDP Server:
+
+* `sudo docker run -it -p 20777:20777 --name f1-telemetry-server f1-telemetry-server:latest`

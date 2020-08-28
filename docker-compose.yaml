@@ -3,6 +3,8 @@ services:
   mongo:
     image: mongo
     restart: always
+    container_name: f1-telemetry-mongo
+    hostname: mongo
     volumes:
       - /data/db:/mongodata
     ports:
@@ -12,6 +14,7 @@ services:
   mongo-express:
     image: mongo-express
     restart: always
+    container_name: f1-telemetry-mongo-express
     ports:
       - 8081:8081
     networks:
@@ -26,8 +29,8 @@ services:
     volumes:
       - /home/rambo/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
       - /home/rambo/mongobi/logs:/logs
-    container_name: mongo-bi
-    hostname: mongo-bi
+    container_name: f1-telemetry-mongobi
+    hostname: mongobi
     ports:
       - 3307:3307
     networks:
@@ -38,6 +41,8 @@ services:
   f1-telemetry-server:
     build: ./src/udp-server
     image: f1-telemetry-server:latest
+    restart: always
+    container_name: f1-telemetry-server
     ports:
       - 20777:20777
     networks:
@@ -48,6 +53,8 @@ services:
   f1-telemetry-web:
     build: ./src/f1-telemetry-web
     image: f1-telemetry-web:latest
+    restart: always
+    container_name: f1-telemetry-web
     ports:
       - 8080:80
     networks:
