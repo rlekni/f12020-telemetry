@@ -156,10 +156,7 @@ func insertDocument(ctx context.Context, mongoDatabase *mongo.Database, collecti
 func newMongoDBConnection() (*mongo.Client, context.Context) {
 	ctx := context.Background()
 
-	// username := "telemetry_user"
-	// password := ""
-	// connectionString := fmt.Sprintf("mongodb+srv://%s:%s@test.azure.mongodb.net/f12020telemetry?retryWrites=true&w=majority", username, password)
-	connectionString := "mongodb://localhost:27017/f12020telemetry?retryWrites=true&w=majority"
+	connectionString := "mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority"
 	// Set client options
 	clientOptions := options.Client().ApplyURI(connectionString)
 
