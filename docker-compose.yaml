@@ -1,6 +1,5 @@
-version: "3.1"
+version: "3.3"
 services:
-  # Add UDP server
   mongo:
     image: mongo
     restart: always
@@ -19,8 +18,10 @@ services:
       - bridge
     depends_on:
       - mongo
-  mongo-bi:
-    image: mongobi # juky/mongobi
+  # BI Connector
+  mongobi:
+    build: ./src/mongobi
+    image: mongobi:latest # juky/mongobi
     restart: always
     volumes:
       - /home/rambo/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
@@ -33,6 +34,26 @@ services:
       - bridge
     depends_on:
       - mongo
+  # UDP Server
+  f1-telemetry-server:
+    build: ./src/udp-server
+    image: f1-telemetry-server:latest
+    ports:
+      - 20777:20777
+    networks:
+      - bridge
+    depends_on:
+      - mongo
+  # Web app
+  f1-telemetry-web:
+    build: ./src/f1-telemetry-web
+    image: f1-telemetry-web:latest
+    ports:
+      - 8080:80
+    networks:
+      - bridge
+    depends_on:
+      - mongobi
 
 networks:
   bridge:
