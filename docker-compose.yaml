@@ -50,7 +50,7 @@ services:
     volumes:
       - ${HOME}/f1-telemetry/udp/logs:/f1-telemetry/udp/logs
     ports:
-      - 20777:20777
+      - 20777:20777/udp
     networks:
       - bridge
     depends_on:

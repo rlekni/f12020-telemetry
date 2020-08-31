@@ -81,7 +81,7 @@ func initialiseLogger() {
 }
 
 func initialiseUDPConnection(port string) (*net.UDPConn, error) {
-	s, err := net.ResolveUDPAddr("udp4", port)
+	s, err := net.ResolveUDPAddr("udp4", "0.0.0.0"+port)
 	if err != nil {
 		return nil, err
 	}
