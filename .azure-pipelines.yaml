@@ -1,6 +1,6 @@
 trigger:
   branches:
-    exclude:
+    include:
       - master
 
 stages:

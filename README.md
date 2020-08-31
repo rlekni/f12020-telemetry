@@ -2,7 +2,7 @@
 
 This repository is for easy telemetry capture from F1 2020 game. The whole stack can easily be run on raspberry pi 4.
 
-[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=serialisation)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=serialisation)
+[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=master)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=master)
 
 ## F1 2020
 
