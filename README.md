@@ -74,6 +74,8 @@ Setup Portainer to monitor containers easily (you can follow this [tutorial](htt
 * `sudo mkdir /opt/portainer /data`
 * `sudo docker pull portainer/portainer`
 * `sudo docker run -d -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data portainer/portainer`
+
+
 Build images and deploy:
 
 * `sudo docker-compose build`
@@ -91,9 +93,9 @@ Web:
 * `docker build -t f1-telemetry-web .`
 * `docker run -it -p 8080:80 --rm --name f1-telemetry-web f1-telemetry-web`
 
-Mongo bi connector:
+Mongo bi connector (Dockerfile for arm64):
 
-* Dockerfile from [here](https://medium.com/@jchamale.usac/building-a-docker-image-for-mongo-bi-connector-c9872b1821ba)
+* Connector ARM64 binary releases can be found [here](https://www.mongodb.com/download-center/bi-connector/releases) 
 * `docker build -t mongobi .`
 
 UDP Server:
