@@ -1,18 +1,12 @@
 # go-f1-telemetry
 
+This repository is for easy telemetry capture from F1 2020 game. The whole stack can easily be run on raspberry pi 4.
+
 [![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=serialisation)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=serialisation)
 
 ## F1 2020
 
 Telemetry specification [found here](https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/)
-
-## UDP Server and Client
-
-Server:
-
-* `go run main.go 1234` where 1234 is a PORT
-
-NOTE: If port number is not provided, defaults to use 20777
 
 ## Packet IDs
 
@@ -75,6 +69,11 @@ To access the databases, download mongo compass or spin up `mongo-express` which
 
 ## Docker
 
+Setup Portainer to monitor containers easily (you can follow this [tutorial](https://linuxhint.com/install_portainer_docker_ui_ubuntu/)):
+
+* `sudo mkdir /opt/portainer /data`
+* `sudo docker pull portainer/portainer`
+* `sudo docker run -d -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data portainer/portainer`
 Build images and deploy:
 
 * `sudo docker-compose build`
