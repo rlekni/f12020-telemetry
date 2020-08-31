@@ -1,18 +1,12 @@
 # go-f1-telemetry
 
-[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=serialisation)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=serialisation)
+This repository is for easy telemetry capture from F1 2020 game. The whole stack can easily be run on raspberry pi 4.
+
+[![Build Status](https://rlekni.visualstudio.com/hbi/_apis/build/status/rlekni.go-f1-telemetry?branchName=master)](https://rlekni.visualstudio.com/hbi/_build/latest?definitionId=20&branchName=master)
 
 ## F1 2020
 
 Telemetry specification [found here](https://forums.codemasters.com/topic/54423-f1%C2%AE-2020-udp-specification/)
-
-## UDP Server and Client
-
-Server:
-
-* `go run main.go 1234` where 1234 is a PORT
-
-NOTE: If port number is not provided, defaults to use 20777
 
 ## Packet IDs
 
@@ -48,7 +42,7 @@ The packets IDs are as follows:
 | Penalty Issued       | “PENA” | A penalty has been issued – details in event   |
 | Speed Trap Triggered | “SPTP” | Speed trap has been triggered by fastest speed |
 
-### Main packets
+## Main packets
 
 | Packet Name                   | Size in bytes | Frequency                       |
 | ----------------------------- | ------------- | ------------------------------- |
@@ -63,17 +57,16 @@ The packets IDs are as follows:
 | PacketFinalClassificationData | 839           | Once at the end of a race       |
 | PacketLobbyInfoData           | 1169          | 2 per second, when in the lobby |
 
-## Mongo
+## Docker Setup
 
-Setup:
+Directories that need to be created in `$HOME`:
 
-* `sudo mkdir -p /mongodata`
-* `sudo docker run -it -v /data/db:/mongodata -p 27017:27017 --name mongodb -d mongo`
-* `sudo docker start mongodb`
+* `f1-telemetry/mongo/data` For mongodb data
+* `f1-telemetry/mongobi/logs` For MongoDB BI Connector logs
+* `f1-telemetry/udp/logs` For UDP Server logs
 
-To access the databases, download mongo compass or spin up `mongo-express` which is part of `docker-compose.yaml`.
-
-## Docker
+For `mongobi` (MongoDB BI Connector) you need to copy over `mongosqld.conf` to `f1-telemetry/mongobi`.
+Connector ARM64 binary releases can be found [here](https://www.mongodb.com/download-center/bi-connector/releases) 
 
 Build images and deploy:
 
@@ -83,20 +76,10 @@ Build images and deploy:
 * `sudo docker-compose stop` will stop containers, but won't remove them
 * `sudo docker-compose start` will start containers again
 
-To list built images:
+### Portainer
 
-* `docker images`
+Setup Portainer to monitor containers easily (you can follow this [tutorial](https://linuxhint.com/install_portainer_docker_ui_ubuntu/)):
 
-Web:
-
-* `docker build -t f1-telemetry-web .`
-* `docker run -it -p 8080:80 --rm --name f1-telemetry-web f1-telemetry-web`
-
-Mongo bi connector:
-
-* Dockerfile from [here](https://medium.com/@jchamale.usac/building-a-docker-image-for-mongo-bi-connector-c9872b1821ba)
-* `docker build -t mongobi .`
-
-UDP Server:
-
-* `sudo docker run -it -p 20777:20777 --name f1-telemetry-server f1-telemetry-server:latest`
+* `sudo mkdir /opt/portainer /data`
+* `sudo docker pull portainer/portainer`
+* `sudo docker run -d -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data portainer/portainer`
