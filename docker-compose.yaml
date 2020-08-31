@@ -6,7 +6,7 @@ services:
     container_name: f1-telemetry-mongo
     hostname: mongo
     volumes:
-      - /data/db:/mongodata
+      - /home/rambo/f1-telemetry/mongo/data:/mongodata
     ports:
       - 27017:27017
     networks:
@@ -24,11 +24,11 @@ services:
   # BI Connector
   mongobi:
     build: ./src/mongobi
-    image: mongobi:latest # juky/mongobi
+    image: mongobi:latest
     restart: always
     volumes:
-      - /home/rambo/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
-      - /home/rambo/mongobi/logs:/logs
+      - /home/rambo/f1-telemetry/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
+      - /home/rambo/f1-telemetry/mongobi/logs:/logs
     container_name: f1-telemetry-mongobi
     hostname: mongobi
     ports:
@@ -43,6 +43,10 @@ services:
     image: f1-telemetry-server:latest
     restart: always
     container_name: f1-telemetry-server
+    environment: 
+      - UDP_PORT=20777
+      - MONGO_CONNECTION_STRING=mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority
+      - LOGS_PATH=/home/rambo/f1-telemetry/udp/logs
     ports:
       - 20777:20777
     networks:
