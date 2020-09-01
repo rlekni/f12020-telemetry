@@ -62,7 +62,7 @@ services:
     restart: always
     container_name: f1-telemetry-web
     ports:
-      - 8080:80
+      - 8085:80
     networks:
       - bridge
     depends_on:
