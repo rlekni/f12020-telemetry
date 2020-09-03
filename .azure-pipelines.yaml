@@ -47,10 +47,10 @@ stages:
             tags: |
               $(Build.BuildId)
               latest
-  - stage: DockerCompose
+  - stage: dockercompose
     displayName: docker-compose
     jobs:
-      - job: dockercompose up
+      - job: dockercompose
         displayName: docker-compose up
         pool:
           vmImage: ubuntu-latest
