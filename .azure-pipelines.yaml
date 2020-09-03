@@ -46,3 +46,13 @@ stages:
             tags: |
               $(Build.BuildId)
               latest
+  - stage: DockerCompose
+    displayName: docker-compose
+    jobs:
+      - job: dockercompose up
+        displayName: docker-compose up
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - script: docker-compose up --build --quiet-pull
+            displayName: docker-compose up
