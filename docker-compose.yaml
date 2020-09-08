@@ -22,28 +22,28 @@ services:
     depends_on:
       - mongo
   # BI Connector
-  mongobi:
-    build: ./src/mongobi
-    image: mongobi:latest
-    restart: always
-    volumes:
-      - ${HOME}/f1-telemetry/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
-      - ${HOME}/f1-telemetry/mongobi/logs:/logs
-    container_name: f1-telemetry-mongobi
-    hostname: mongobi
-    ports:
-      - 3307:3307
-    networks:
-      - bridge
-    depends_on:
-      - mongo
+  # mongobi:
+  #   build: ./src/mongobi
+  #   image: mongobi:latest
+  #   restart: always
+  #   volumes:
+  #     - ${HOME}/f1-telemetry/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
+  #     - ${HOME}/f1-telemetry/mongobi/logs:/logs
+  #   container_name: f1-telemetry-mongobi
+  #   hostname: mongobi
+  #   ports:
+  #     - 3307:3307
+  #   networks:
+  #     - bridge
+  #   depends_on:
+  #     - mongo
   # UDP Server
   f1-telemetry-server:
     build: ./src/udp-server
     image: f1-telemetry-server:latest
     restart: always
     container_name: f1-telemetry-server
-    environment: 
+    environment:
       - UDP_PORT=20777
       - MONGO_CONNECTION_STRING=mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority
       - LOGS_PATH=/f1-telemetry/udp/logs
@@ -65,8 +65,55 @@ services:
       - 8085:80
     networks:
       - bridge
+  # Monitoring
+  portainer:
+    image: portainer/portainer:alpine
+    restart: always
+    container_name: portainer
+    hostname: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer:/data portainer/portainer
+    ports:
+      - 9000:9000
+    networks:
+      - bridge
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    volumes:
+      - ./src/prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    networks:
+      - bridge
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    user: "472"
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./src/grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./src/grafana/config.monitoring
+    networks:
+      - bridge
     depends_on:
-      - mongobi
+      - prometheus
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
 
 networks:
   bridge:
