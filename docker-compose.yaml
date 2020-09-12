@@ -43,22 +43,6 @@ services:
       - bridge
     depends_on:
       - mongo
-  # BI Connector
-  # mongobi:
-  #   build: ./src/mongobi
-  #   image: mongobi:latest
-  #   restart: always
-  #   volumes:
-  #     - ./src/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
-  #     - ${HOME}/f1-telemetry/mongobi/logs:/logs
-  #   container_name: f1-telemetry-mongobi
-  #   hostname: mongobi
-  #   ports:
-  #     - 3307:3307
-  #   networks:
-  #     - bridge
-  #   depends_on:
-  #     - mongo
   # UDP Server
   f1-telemetry-server:
     build: ./src/udp-server

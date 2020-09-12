@@ -60,10 +60,7 @@ The packets IDs are as follows:
 Directories that need to be created in `$HOME`:
 
 * `f1-telemetry/mongo/data` For mongodb data
-* `f1-telemetry/mongobi/logs` For MongoDB BI Connector logs
 * `f1-telemetry/udp/logs` For UDP Server logs
-
-MongoBI Connector ARM64 binary releases can be found [here](https://www.mongodb.com/download-center/bi-connector/releases) 
 
 Build images and deploy:
 
