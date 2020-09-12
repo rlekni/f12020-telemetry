@@ -1,13 +1,16 @@
 version: "3.3"
 services:
   postgres:
-    image: arm64v8/postgres:13-alpine
+    # image: arm64v8/postgres:13-alpine
+    image: postgres:13-alpine
     restart: always
     container_name: postgres
+    hostname: postgres
     environment: 
       - POSTGRES_PASSWORD=password123
       - POSTGRES_USER=admin
       - PGDATA=/var/lib/postgresql/data
+      - POSTGRES_DB=f12020telemetry
     volumes:
       - postgres_data:/var/lib/postgresql/data
     # ports:
@@ -53,6 +56,11 @@ services:
       - UDP_PORT=20777
       - MONGO_CONNECTION_STRING=mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority
       - LOGS_PATH=/f1-telemetry/udp/logs
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=f12020telemetry
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password123
     volumes:
       - udp_logs:/f1-telemetry/udp/logs
     ports:

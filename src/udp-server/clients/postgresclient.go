@@ -3,8 +3,9 @@ package clients
 import (
 	"database/sql"
 	"fmt"
-
-	"github.com/sirupsen/logrus"
+	"main/helpers"
+	"os"
+	"strconv"
 )
 
 const (
@@ -24,16 +25,19 @@ type PostgreClient struct {
 }
 
 func NewPostgreConnection() PostgreClient {
+	host := os.Getenv("POSTGRES_HOST")
+	user := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	dbname := os.Getenv("POSTGRES_DATABASE")
+	port, err := strconv.ParseInt(os.Getenv("POSTGRES_PORT"), 10, 64)
+	helpers.ThrowIfError(err)
+
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		logrus.Fatalln(err)
-	}
+	helpers.ThrowIfError(err)
 
 	err = db.Ping()
-	if err != nil {
-		logrus.Fatalln(err)
-	}
+	helpers.ThrowIfError(err)
 	// defer db.Close()
 
 	fmt.Println("Connected to PostgreSQL!")
@@ -46,9 +50,7 @@ func NewPostgreConnection() PostgreClient {
 func (client PostgreClient) Insert(packet interface{}) {
 	var id int
 	err := client.Database.QueryRow(testInsertSQL, "test").Scan(&id)
-	if err != nil {
-		logrus.Fatalln(err)
-	}
+	helpers.ThrowIfError(err)
 
 	fmt.Println("New record ID is:", id)
 }

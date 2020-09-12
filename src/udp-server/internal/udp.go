@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"main/helpers"
 	"net"
 	"os"
 
@@ -12,14 +13,10 @@ func InitialiseUDPListener() *net.UDPConn {
 	logrus.Infoln("Using Port: ", port)
 
 	s, err := net.ResolveUDPAddr("udp4", "0.0.0.0:"+port)
-	if err != nil {
-		logrus.Fatalln(err)
-	}
+	helpers.ThrowIfError(err)
 
 	connection, err := net.ListenUDP("udp4", s)
-	if err != nil {
-		logrus.Fatalln(err)
-	}
+	helpers.ThrowIfError(err)
 
 	return connection
 }

@@ -2,6 +2,7 @@ package clients
 
 import (
 	"context"
+	"main/helpers"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -20,17 +21,11 @@ func NewMongoDBConnection(ctx context.Context) *MongoClient {
 
 	// Connect to MongoDB
 	client, err := mongo.Connect(ctx, clientOptions)
-
-	if err != nil {
-		logrus.Fatal(err)
-	}
+	helpers.ThrowIfError(err)
 
 	// Check the connection
 	err = client.Ping(ctx, nil)
-
-	if err != nil {
-		logrus.Fatal(err)
-	}
+	helpers.ThrowIfError(err)
 
 	logrus.Infoln("Connected to MongoDB!")
 
@@ -57,14 +52,12 @@ func (client MongoClient) GetCollection(collectionName string) *mongo.Collection
 func (client MongoClient) Insert(ctx context.Context, collectionName string, packet interface{}) {
 	collection := client.GetCollection(collectionName)
 	if collection == nil {
-		logrus.Error("Collection has not been retrieved")
+		logrus.Error("Collection could not been retrieved")
 		return
 	}
 
 	result, err := collection.InsertOne(ctx, packet)
-	if err != nil {
-		logrus.Fatal(err)
-	}
+	helpers.ThrowIfError(err)
 
 	logrus.Debugln("Inserted a single document: ", result.InsertedID)
 }
