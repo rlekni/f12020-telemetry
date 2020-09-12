@@ -17,7 +17,30 @@ import (
 type RepositoryClient interface {
 	Disconnect(ctx context.Context) error
 	Insert(ctx context.Context, packetType string, packet interface{}) error
+	InsertPacketMotionData(ctx context.Context, packet interface{}) error
+	InsertPacketSessionData(ctx context.Context, packet interface{}) error
+	InsertPacketLapData(ctx context.Context, packet interface{}) error
+	InsertPacketEventData(ctx context.Context, packet interface{}) error
+	InsertPacketParticipantsData(ctx context.Context, packet interface{}) error
+	InsertPacketCarSetupData(ctx context.Context, packet interface{}) error
+	InsertPacketCarTelemetryData(ctx context.Context, packet interface{}) error
+	InsertPacketCarStatusData(ctx context.Context, packet interface{}) error
+	InsertPacketFinalClassificationData(ctx context.Context, packet interface{}) error
+	InsertPacketLobbyInfoData(ctx context.Context, packet interface{}) error
 }
+
+const (
+	PacketMotionData              = "packetMotionData"
+	PacketSessionData             = "packetSessionData"
+	PacketLapData                 = "packetLapData"
+	PacketEventData               = "packetEventData"
+	PacketParticipantsData        = "packetParticipantsData"
+	PacketCarSetupData            = "packetCarSetupData"
+	PacketCarTelemetryData        = "packetCarTelemetryData"
+	PacketCarStatusData           = "packetCarStatusData"
+	PacketFinalClassificationData = "packetFinalClassificationData"
+	PacketLobbyInfoData           = "packetLobbyInfoData"
+)
 
 type RepositoryType string
 

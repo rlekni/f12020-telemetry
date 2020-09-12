@@ -23,52 +23,52 @@ func DeserialisePacket(ctx context.Context, client clients.RepositoryClient, dat
 		packet, err := f12020packets.ToPacketMotionData(data[24:1464], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetMotionData", packet)
+		client.InsertPacketMotionData(ctx, packet)
 	case 1:
 		packet, err := f12020packets.ToPacketSessionData(data[24:251], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetSessionData", packet)
+		client.InsertPacketSessionData(ctx, packet)
 	case 2:
 		packet, err := f12020packets.ToPacketLapData(data[24:1190], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetLapData", packet)
+		client.InsertPacketLapData(ctx, packet)
 	case 3:
 		packet, err := f12020packets.ToPacketEventData(data[24:35], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetEventData", packet)
+		client.InsertPacketEventData(ctx, packet)
 	case 4:
 		packet, err := f12020packets.ToPacketParticipantsData(data[24:1213], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetParticipantsData", packet)
+		client.InsertPacketParticipantsData(ctx, packet)
 	case 5:
 		packet, err := f12020packets.ToPacketCarSetupData(data[24:1102], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetCarSetupData", packet)
+		client.InsertPacketCarSetupData(ctx, packet)
 	case 6:
 		packet, err := f12020packets.ToPacketCarTelemetryData(data[24:1307], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetCarTelemetryData", packet)
+		client.InsertPacketCarTelemetryData(ctx, packet)
 	case 7:
 		packet, err := f12020packets.ToPacketCarStatusData(data[24:1344], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetCarStatusData", packet)
+		client.InsertPacketCarStatusData(ctx, packet)
 	case 8:
 		packet, err := f12020packets.ToPacketFinalClassificationData(data[24:839], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetFinalClassificationData", packet)
+		client.InsertPacketFinalClassificationData(ctx, packet)
 	case 9:
 		packet, err := f12020packets.ToPacketLobbyInfoData(data[24:1169], header)
 		helpers.LogIfError(err)
 
-		client.Insert(ctx, "packetLobbyInfoData", packet)
+		client.InsertPacketLobbyInfoData(ctx, packet)
 	default:
 		logrus.Warningf("None of the defined PacketIDs matched. Data length: %d, PacketID: %d\n", len(data), header.PacketID)
 	}

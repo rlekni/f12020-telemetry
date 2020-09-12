@@ -33,3 +33,43 @@ func (client MongoClient) Insert(ctx context.Context, packetType string, packet 
 
 	return err
 }
+
+func (client MongoClient) InsertPacketMotionData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketMotionData, packet)
+}
+
+func (client MongoClient) InsertPacketSessionData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketSessionData, packet)
+}
+
+func (client MongoClient) InsertPacketLapData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketLapData, packet)
+}
+
+func (client MongoClient) InsertPacketEventData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketEventData, packet)
+}
+
+func (client MongoClient) InsertPacketParticipantsData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketParticipantsData, packet)
+}
+
+func (client MongoClient) InsertPacketCarSetupData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketCarSetupData, packet)
+}
+
+func (client MongoClient) InsertPacketCarTelemetryData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketCarTelemetryData, packet)
+}
+
+func (client MongoClient) InsertPacketCarStatusData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketCarStatusData, packet)
+}
+
+func (client MongoClient) InsertPacketFinalClassificationData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketFinalClassificationData, packet)
+}
+
+func (client MongoClient) InsertPacketLobbyInfoData(ctx context.Context, packet interface{}) error {
+	return client.Insert(ctx, PacketLobbyInfoData, packet)
+}
