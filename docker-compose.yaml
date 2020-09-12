@@ -1,5 +1,20 @@
 version: "3.3"
 services:
+  postgres:
+    image: arm64v8/postgres:13-alpine
+    restart: always
+    container_name: postgres
+    environment: 
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_USER=s
+    networks:
+      - bridge
+  adminer:
+    image: adminer:latest
+    restart: always
+    container_name: adminer
+    networks: 
+      - bridge
   mongo:
     image: mongo
     restart: always
@@ -27,7 +42,7 @@ services:
   #   image: mongobi:latest
   #   restart: always
   #   volumes:
-  #     - ${HOME}/f1-telemetry/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
+  #     - ./src/mongobi/mongosqld.conf:/home/mongobi/mongosqld.conf
   #     - ${HOME}/f1-telemetry/mongobi/logs:/logs
   #   container_name: f1-telemetry-mongobi
   #   hostname: mongobi

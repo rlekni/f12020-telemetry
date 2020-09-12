@@ -63,21 +63,11 @@ Directories that need to be created in `$HOME`:
 * `f1-telemetry/mongobi/logs` For MongoDB BI Connector logs
 * `f1-telemetry/udp/logs` For UDP Server logs
 
-For `mongobi` (MongoDB BI Connector) you need to copy over `mongosqld.conf` to `f1-telemetry/mongobi`.
-Connector ARM64 binary releases can be found [here](https://www.mongodb.com/download-center/bi-connector/releases) 
+MongoBI Connector ARM64 binary releases can be found [here](https://www.mongodb.com/download-center/bi-connector/releases) 
 
 Build images and deploy:
 
-* `sudo docker-compose build`
-* `sudo docker-compose up -d`
+* `sudo docker-compose up -d --remove-orphans --build`
 * `sudo docker-compose down` to stop and remove all containers
 * `sudo docker-compose stop` will stop containers, but won't remove them
 * `sudo docker-compose start` will start containers again
-
-### Portainer
-
-Setup Portainer to monitor containers easily (you can follow this [tutorial](https://linuxhint.com/install_portainer_docker_ui_ubuntu/)):
-
-* `sudo mkdir /opt/portainer /data`
-* `sudo docker pull portainer/portainer`
-* `sudo docker run -d -p 9000:9000 --restart always -v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data portainer/portainer`
