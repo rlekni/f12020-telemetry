@@ -9,11 +9,6 @@ import (
 )
 
 const (
-	host          = "postgres"
-	port          = 5432
-	user          = "admin"
-	password      = "password123"
-	dbname        = "f1telemetry"
 	testInsertSQL = `
 	INSERT INTO packets (type)
 	VALUES ($1)
