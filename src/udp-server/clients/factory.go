@@ -15,11 +15,8 @@ import (
 
 // RepositoryClient -
 type RepositoryClient interface {
-	Connect(ctx context.Context) error
 	Disconnect(ctx context.Context) error
 	Insert(ctx context.Context, packetType string, packet interface{}) error
-	Update(packet interface{}) error
-	Delete(id string) error
 }
 
 type RepositoryType string
@@ -43,7 +40,7 @@ func NewRepositoryClient(ctx context.Context, repositoryType RepositoryType) Rep
 }
 
 func newMongoClient(ctx context.Context) *MongoClient {
-	logrus.Infoln("Created MongoDB client.")
+	logrus.Debugln("Creating MongoDB client.")
 
 	connectionString := os.Getenv("MONGO_CONNECTION_STRING")
 	databaseName := os.Getenv("MONGO_DATABASE")
@@ -82,7 +79,6 @@ func newPostgreClient() *PostgreClient {
 
 	err = db.Ping()
 	helpers.ThrowIfError(err)
-	// defer db.Close()
 
 	logrus.Infoln("Connected to PostgreSQL!")
 	return &PostgreClient{

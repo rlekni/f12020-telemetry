@@ -19,10 +19,9 @@ func main() {
 
 	// Initialise new MongoDB connection and defer close
 	ctx := context.Background()
-	// mongoClient := clients.NewMongoDBConnection(ctx)
 	repositoryType := os.Getenv("REPOSITORY_TYPE")
-	mongoClient := clients.NewRepositoryClient(ctx, clients.RepositoryType(repositoryType))
-	defer mongoClient.Disconnect(ctx)
+	client := clients.NewRepositoryClient(ctx, clients.RepositoryType(repositoryType))
+	defer client.Disconnect(ctx)
 
 	buffer := make([]byte, 2048)
 	for {
@@ -35,6 +34,6 @@ func main() {
 		logrus.Info("-> ", addr)
 		data := buffer[0:n]
 
-		internal.DeserialisePacket(ctx, mongoClient, data)
+		internal.DeserialisePacket(ctx, client, data)
 	}
 }
