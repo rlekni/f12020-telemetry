@@ -1,11 +1,12 @@
 package clients
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"main/helpers"
-	"os"
-	"strconv"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -19,33 +20,33 @@ type PostgreClient struct {
 	Database *sql.DB
 }
 
-func NewPostgreConnection() PostgreClient {
-	host := os.Getenv("POSTGRES_HOST")
-	user := os.Getenv("POSTGRES_USER")
-	password := os.Getenv("POSTGRES_PASSWORD")
-	dbname := os.Getenv("POSTGRES_DATABASE")
-	port, err := strconv.ParseInt(os.Getenv("POSTGRES_PORT"), 10, 64)
-	helpers.ThrowIfError(err)
+func (client PostgreClient) Connect(ctx context.Context) error {
+	logrus.Infoln("Connected to PostgreSQL!")
 
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-	helpers.ThrowIfError(err)
-
-	err = db.Ping()
-	helpers.ThrowIfError(err)
-	// defer db.Close()
-
-	fmt.Println("Connected to PostgreSQL!")
-
-	return PostgreClient{
-		Database: db,
-	}
+	return nil
 }
 
-func (client PostgreClient) Insert(packet interface{}) {
+func (client PostgreClient) Disconnect(ctx context.Context) error {
+	logrus.Warningln("Closing PostgreSQL connection!")
+	return client.Database.Close()
+}
+
+func (client PostgreClient) Insert(ctx context.Context, packetType string, packet interface{}) error {
 	var id int
 	err := client.Database.QueryRow(testInsertSQL, "test").Scan(&id)
-	helpers.ThrowIfError(err)
+	helpers.LogIfError(err)
+	return err
+}
 
-	fmt.Println("New record ID is:", id)
+func (client PostgreClient) Update(packet interface{}) error {
+	logrus.Infoln("Updating Row in PostgreSQL!")
+
+	return fmt.Errorf("NOT IMPLEMENTED FOR PostgreSQL!")
+}
+
+func (client PostgreClient) Delete(id string) error {
+	info := fmt.Sprintf("Removing Row with id: %s from PostgreSQL!", id)
+	logrus.Infoln(info)
+
+	return fmt.Errorf("NOT implemented for PostgreSQL!")
 }

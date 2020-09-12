@@ -52,15 +52,17 @@ services:
     image: f1-telemetry-server:latest
     restart: always
     container_name: f1-telemetry-server
-    environment:
-      - UDP_PORT=20777
+    environment:      
+      - LOGS_PATH=/f1-telemetry/udp/logs      
       - MONGO_CONNECTION_STRING=mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority
-      - LOGS_PATH=/f1-telemetry/udp/logs
+      - MONGO_DATABASE=f12020telemetry
+      - POSTGRES_DATABASE=f12020telemetry
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - POSTGRES_DATABASE=f12020telemetry
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password123
+      - REPOSITORY_TYPE=MONGODB
+      - UDP_PORT=20777
     volumes:
       - udp_logs:/f1-telemetry/udp/logs
     ports:

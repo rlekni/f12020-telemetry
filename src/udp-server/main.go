@@ -4,7 +4,9 @@ import (
 	"context"
 	"main/clients"
 	"main/internal"
+	"os"
 
+	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
 
@@ -17,10 +19,10 @@ func main() {
 
 	// Initialise new MongoDB connection and defer close
 	ctx := context.Background()
-	mongoClient := clients.NewMongoDBConnection(ctx)
+	// mongoClient := clients.NewMongoDBConnection(ctx)
+	repositoryType := os.Getenv("REPOSITORY_TYPE")
+	mongoClient := clients.NewRepositoryClient(ctx, clients.RepositoryType(repositoryType))
 	defer mongoClient.Disconnect(ctx)
-
-	mongoClient.GetDatabase("f12020telemetry")
 
 	buffer := make([]byte, 2048)
 	for {

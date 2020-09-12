@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func DeserialisePacket(ctx context.Context, mongoClient *clients.MongoClient, data []byte) {
+func DeserialisePacket(ctx context.Context, mongoClient clients.RepositoryClient, data []byte) {
 	header, err := f12020packets.ToPacketHeader(data[0:24])
 	if err != nil {
 		logrus.Errorf("Failed to decode Packet Header. Error: %q", err)
