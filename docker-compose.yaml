@@ -6,13 +6,20 @@ services:
     container_name: postgres
     environment: 
       - POSTGRES_PASSWORD=password123
-      - POSTGRES_USER=s
+      - POSTGRES_USER=admin
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    # ports:
+    #   - 5432:5432
     networks:
       - bridge
   adminer:
     image: adminer:latest
     restart: always
     container_name: adminer
+    ports:
+      - 8084:8080
     networks: 
       - bridge
   mongo:
@@ -146,6 +153,7 @@ services:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  db-data: {}
 
 networks:
   bridge:
