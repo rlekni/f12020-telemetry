@@ -57,14 +57,9 @@ The packets IDs are as follows:
 
 ## Docker Setup
 
-Directories that need to be created in `$HOME`:
+Docker commands:
 
-* `f1-telemetry/mongo/data` For mongodb data
-* `f1-telemetry/udp/logs` For UDP Server logs
-
-Build images and deploy:
-
-* `sudo docker-compose up -d --remove-orphans --build`
+* `sudo docker-compose up -d --remove-orphans --build` build and deploy
 * `sudo docker-compose down` to stop and remove all containers
 * `sudo docker-compose stop` will stop containers, but won't remove them
 * `sudo docker-compose start` will start containers again
