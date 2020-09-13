@@ -3,6 +3,7 @@ services:
   postgres:
     # image: arm64v8/postgres:13-alpine
     image: postgres:13-alpine
+    # build: ./src/postgres
     restart: always
     container_name: postgres
     hostname: postgres
@@ -13,8 +14,20 @@ services:
       - POSTGRES_DB=f12020telemetry
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    # ports:
-    #   - 5432:5432
+      - ./src/postgres/init.sql:/docker-entrypoint-initdb.d/tables.sql
+    networks:
+      - bridge
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@telemetry.com
+      - PGADMIN_DEFAULT_PASSWORD=secret
+      - PGADMIN_LISTEN_PORT=80
+    ports:
+      - 8083:80
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
     networks:
       - bridge
   adminer:
@@ -53,7 +66,7 @@ services:
     restart: always
     container_name: f1-telemetry-server
     environment:      
-      - LOGS_PATH=/f1-telemetry/udp/logs      
+      - LOGS_PATH=/udp_logs      
       - MONGO_CONNECTION_STRING=mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority
       - MONGO_DATABASE=f12020telemetry
       - POSTGRES_DATABASE=f12020telemetry
@@ -64,7 +77,7 @@ services:
       - REPOSITORY_TYPE=MONGODB
       - UDP_PORT=20777
     volumes:
-      - udp_logs:/f1-telemetry/udp/logs
+      - udp_logs:/udp_logs
     ports:
       - 20777:20777/udp
     networks:
@@ -148,6 +161,7 @@ volumes:
   prometheus_data: {}
   grafana_data: {}
   postgres_data: {}
+  pgadmin_data: {}
   mongo_data: {}
   udp_logs: {}
 

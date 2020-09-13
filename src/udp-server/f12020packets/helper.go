@@ -166,25 +166,46 @@ func ToPacketMotionData(data []byte, header *PacketHeader) (*PacketMotionData, e
 		motionData[i] = *payload
 	}
 
+	suspensionPosition := convertTo4LengthFloat32Array(data[1319:1335])
+	suspensionVelocity := convertTo4LengthFloat32Array(data[1335:1351])
+	suspensionAcceleration := convertTo4LengthFloat32Array(data[1351:1367])
+	wheelSpeed := convertTo4LengthFloat32Array(data[1367:1383])
+	wheelSlip := convertTo4LengthFloat32Array(data[1383:1399])
+
 	// Construct packet and decode the rest of the data
 	packet := &PacketMotionData{
-		Header:                 header,
-		CarMotionData:          motionData,
-		SuspensionPosition:     convertTo4LengthFloat32Array(data[1319:1335]),
-		SuspensionVelocity:     convertTo4LengthFloat32Array(data[1335:1351]),
-		SuspensionAcceleration: convertTo4LengthFloat32Array(data[1351:1367]),
-		WheelSpeed:             convertTo4LengthFloat32Array(data[1367:1383]),
-		WheelSlip:              convertTo4LengthFloat32Array(data[1383:1399]),
-		LocalVelocityX:         convertToFloat32(data[1399:1403]),
-		LocalVelocityY:         convertToFloat32(data[1403:1407]),
-		LocalVelocityZ:         convertToFloat32(data[1407:1411]),
-		AngularVelocityX:       convertToFloat32(data[1411:1415]),
-		AngularVelocityY:       convertToFloat32(data[1415:1419]),
-		AngularVelocityZ:       convertToFloat32(data[1419:1423]),
-		AngularAccelerationX:   convertToFloat32(data[1423:1427]),
-		AngularAccelerationY:   convertToFloat32(data[1427:1431]),
-		AngularAccelerationZ:   convertToFloat32(data[1431:1435]),
-		FrontWheelsAngle:       convertToFloat32(data[1435:1439]),
+		Header:                   header,
+		CarMotionData:            motionData,
+		SuspensionPositionRL:     suspensionPosition[0],
+		SuspensionPositionRR:     suspensionPosition[1],
+		SuspensionPositionFL:     suspensionPosition[2],
+		SuspensionPositionFR:     suspensionPosition[3],
+		SuspensionVelocityRL:     suspensionVelocity[0],
+		SuspensionVelocityRR:     suspensionVelocity[1],
+		SuspensionVelocityFL:     suspensionVelocity[2],
+		SuspensionVelocityFR:     suspensionVelocity[3],
+		SuspensionAccelerationRL: suspensionAcceleration[0],
+		SuspensionAccelerationRR: suspensionAcceleration[1],
+		SuspensionAccelerationFL: suspensionAcceleration[2],
+		SuspensionAccelerationFR: suspensionAcceleration[3],
+		WheelSpeedRL:             wheelSpeed[0],
+		WheelSpeedRR:             wheelSpeed[1],
+		WheelSpeedFL:             wheelSpeed[2],
+		WheelSpeedFR:             wheelSpeed[3],
+		WheelSlipRL:              wheelSlip[0],
+		WheelSlipRR:              wheelSlip[1],
+		WheelSlipFL:              wheelSlip[2],
+		WheelSlipFR:              wheelSlip[3],
+		LocalVelocityX:           convertToFloat32(data[1399:1403]),
+		LocalVelocityY:           convertToFloat32(data[1403:1407]),
+		LocalVelocityZ:           convertToFloat32(data[1407:1411]),
+		AngularVelocityX:         convertToFloat32(data[1411:1415]),
+		AngularVelocityY:         convertToFloat32(data[1415:1419]),
+		AngularVelocityZ:         convertToFloat32(data[1419:1423]),
+		AngularAccelerationX:     convertToFloat32(data[1423:1427]),
+		AngularAccelerationY:     convertToFloat32(data[1427:1431]),
+		AngularAccelerationZ:     convertToFloat32(data[1431:1435]),
+		FrontWheelsAngle:         convertToFloat32(data[1435:1439]),
 	}
 
 	return packet, nil

@@ -51,21 +51,36 @@ type PacketMotionData struct {
 	CarMotionData [22]CarMotionData // Data for all cars on track
 
 	// Extra player car ONLY data
-	SuspensionPosition     [4]float32 // Note: All wheel arrays have the following order:
-	SuspensionVelocity     [4]float32 // RL, RR, FL, FR
-	SuspensionAcceleration [4]float32 // RL, RR, FL, FR
-	WheelSpeed             [4]float32 // Speed of each wheel
-	WheelSlip              [4]float32 // Slip ratio for each wheel
-	LocalVelocityX         float32    // Velocity in local space
-	LocalVelocityY         float32    // Velocity in local space
-	LocalVelocityZ         float32    // Velocity in local space
-	AngularVelocityX       float32    // Angular velocity x-component
-	AngularVelocityY       float32    // Angular velocity y-component
-	AngularVelocityZ       float32    // Angular velocity z-component
-	AngularAccelerationX   float32    // Angular velocity x-component
-	AngularAccelerationY   float32    // Angular velocity y-component
-	AngularAccelerationZ   float32    // Angular velocity z-component
-	FrontWheelsAngle       float32    // Current front wheels angle in radians
+	SuspensionPositionRL     float32
+	SuspensionPositionRR     float32
+	SuspensionPositionFL     float32
+	SuspensionPositionFR     float32
+	SuspensionVelocityRL     float32
+	SuspensionVelocityRR     float32
+	SuspensionVelocityFL     float32
+	SuspensionVelocityFR     float32
+	SuspensionAccelerationRL float32
+	SuspensionAccelerationRR float32
+	SuspensionAccelerationFL float32
+	SuspensionAccelerationFR float32
+	WheelSpeedRL             float32
+	WheelSpeedRR             float32
+	WheelSpeedFL             float32
+	WheelSpeedFR             float32
+	WheelSlipRL              float32
+	WheelSlipRR              float32
+	WheelSlipFL              float32
+	WheelSlipFR              float32
+	LocalVelocityX           float32 // Velocity in local space
+	LocalVelocityY           float32 // Velocity in local space
+	LocalVelocityZ           float32 // Velocity in local space
+	AngularVelocityX         float32 // Angular velocity x-component
+	AngularVelocityY         float32 // Angular velocity y-component
+	AngularVelocityZ         float32 // Angular velocity z-component
+	AngularAccelerationX     float32 // Angular velocity x-component
+	AngularAccelerationY     float32 // Angular velocity y-component
+	AngularAccelerationZ     float32 // Angular velocity z-component
+	FrontWheelsAngle         float32 // Current front wheels angle in radians
 }
 
 // Session Packet
