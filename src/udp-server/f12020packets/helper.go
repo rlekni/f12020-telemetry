@@ -48,41 +48,11 @@ func convertToFloat64(data []byte) float64 {
 	return math.Float64frombits(binary.LittleEndian.Uint64(data)) / 32767.0
 }
 
-func convertTo4LengthFloat32Array(data []byte) [4]float32 {
-	var result [4]float32
-	for i := 0; i < 4; i++ {
-		startIndex := 0 + (i * 4)
-		endIndex := startIndex + 4
-		value := convertToFloat32(data[startIndex:endIndex])
-		result[i] = value
-	}
-	return result
-}
-
 func convertToint16(data []byte) int16 {
 	var value int16
 	value |= int16(data[0])
 	value |= int16(data[1]) << 8
 	return value
-}
-
-func convertTo4LengthUint16Array(data []byte) [4]uint16 {
-	var result [4]uint16
-	for i := 0; i < 4; i++ {
-		startIndex := 0 + (i * 4)
-		endIndex := startIndex + 4
-		value := binary.LittleEndian.Uint16(data[startIndex:endIndex])
-		result[i] = value
-	}
-	return result
-}
-
-func convertTo4LengthUint8Array(data []byte) [4]uint8 {
-	var result [4]uint8
-	for i := 0; i < 4; i++ {
-		result[i] = uint8(data[i])
-	}
-	return result
 }
 
 func convertTo8LengthUint8Array(data []byte) [8]uint8 {
@@ -166,36 +136,30 @@ func ToPacketMotionData(data []byte, header *PacketHeader) (*PacketMotionData, e
 		motionData[i] = *payload
 	}
 
-	suspensionPosition := convertTo4LengthFloat32Array(data[1319:1335])
-	suspensionVelocity := convertTo4LengthFloat32Array(data[1335:1351])
-	suspensionAcceleration := convertTo4LengthFloat32Array(data[1351:1367])
-	wheelSpeed := convertTo4LengthFloat32Array(data[1367:1383])
-	wheelSlip := convertTo4LengthFloat32Array(data[1383:1399])
-
 	// Construct packet and decode the rest of the data
 	packet := &PacketMotionData{
 		Header:                   header,
 		CarMotionData:            motionData,
-		SuspensionPositionRL:     suspensionPosition[0],
-		SuspensionPositionRR:     suspensionPosition[1],
-		SuspensionPositionFL:     suspensionPosition[2],
-		SuspensionPositionFR:     suspensionPosition[3],
-		SuspensionVelocityRL:     suspensionVelocity[0],
-		SuspensionVelocityRR:     suspensionVelocity[1],
-		SuspensionVelocityFL:     suspensionVelocity[2],
-		SuspensionVelocityFR:     suspensionVelocity[3],
-		SuspensionAccelerationRL: suspensionAcceleration[0],
-		SuspensionAccelerationRR: suspensionAcceleration[1],
-		SuspensionAccelerationFL: suspensionAcceleration[2],
-		SuspensionAccelerationFR: suspensionAcceleration[3],
-		WheelSpeedRL:             wheelSpeed[0],
-		WheelSpeedRR:             wheelSpeed[1],
-		WheelSpeedFL:             wheelSpeed[2],
-		WheelSpeedFR:             wheelSpeed[3],
-		WheelSlipRL:              wheelSlip[0],
-		WheelSlipRR:              wheelSlip[1],
-		WheelSlipFL:              wheelSlip[2],
-		WheelSlipFR:              wheelSlip[3],
+		SuspensionPositionRL:     convertToFloat32(data[1319:1323]),
+		SuspensionPositionRR:     convertToFloat32(data[1323:1327]),
+		SuspensionPositionFL:     convertToFloat32(data[1327:1331]),
+		SuspensionPositionFR:     convertToFloat32(data[1331:1335]),
+		SuspensionVelocityRL:     convertToFloat32(data[1335:1339]),
+		SuspensionVelocityRR:     convertToFloat32(data[1339:1343]),
+		SuspensionVelocityFL:     convertToFloat32(data[1343:1347]),
+		SuspensionVelocityFR:     convertToFloat32(data[1347:1351]),
+		SuspensionAccelerationRL: convertToFloat32(data[1351:1355]),
+		SuspensionAccelerationRR: convertToFloat32(data[1355:1359]),
+		SuspensionAccelerationFL: convertToFloat32(data[1359:1363]),
+		SuspensionAccelerationFR: convertToFloat32(data[1363:1367]),
+		WheelSpeedRL:             convertToFloat32(data[1367:1371]),
+		WheelSpeedRR:             convertToFloat32(data[1371:1375]),
+		WheelSpeedFL:             convertToFloat32(data[1375:1379]),
+		WheelSpeedFR:             convertToFloat32(data[1379:1383]),
+		WheelSlipRL:              convertToFloat32(data[1383:1387]),
+		WheelSlipRR:              convertToFloat32(data[1387:1391]),
+		WheelSlipFL:              convertToFloat32(data[1391:1395]),
+		WheelSlipFR:              convertToFloat32(data[1395:1399]),
 		LocalVelocityX:           convertToFloat32(data[1399:1403]),
 		LocalVelocityY:           convertToFloat32(data[1403:1407]),
 		LocalVelocityZ:           convertToFloat32(data[1407:1411]),
@@ -575,21 +539,36 @@ func ToCarTelemetryData(data []byte) (*CarTelemetryData, error) {
 	}
 
 	carTelemetryData := &CarTelemetryData{
-		Speed:                   binary.LittleEndian.Uint16(data[0:2]),
-		Throttle:                convertToFloat32(data[2:6]),
-		Steer:                   convertToFloat32(data[6:10]),
-		Brake:                   convertToFloat32(data[10:14]),
-		Clutch:                  uint8(data[14]),
-		Gear:                    int8(data[15]),
-		EngineRPM:               binary.LittleEndian.Uint16(data[16:18]),
-		Drs:                     uint8(data[18]),
-		RevLightsPercent:        uint8(data[19]),
-		BrakesTemperature:       convertTo4LengthUint16Array(data[20:28]),
-		TyresSurfaceTemperature: convertTo4LengthUint8Array(data[28:32]),
-		TyresInnerTemperature:   convertTo4LengthUint8Array(data[32:36]),
-		EngineTemperature:       binary.LittleEndian.Uint16(data[36:38]),
-		TyresPressure:           convertTo4LengthFloat32Array(data[38:54]),
-		SurfaceType:             convertTo4LengthUint8Array(data[54:58]),
+		Speed:                     binary.LittleEndian.Uint16(data[0:2]),
+		Throttle:                  convertToFloat32(data[2:6]),
+		Steer:                     convertToFloat32(data[6:10]),
+		Brake:                     convertToFloat32(data[10:14]),
+		Clutch:                    uint8(data[14]),
+		Gear:                      int8(data[15]),
+		EngineRPM:                 binary.LittleEndian.Uint16(data[16:18]),
+		Drs:                       uint8(data[18]),
+		RevLightsPercent:          uint8(data[19]),
+		BrakesTemperatureRL:       binary.LittleEndian.Uint16(data[20:22]),
+		BrakesTemperatureRR:       binary.LittleEndian.Uint16(data[22:24]),
+		BrakesTemperatureFL:       binary.LittleEndian.Uint16(data[24:26]),
+		BrakesTemperatureFR:       binary.LittleEndian.Uint16(data[26:28]),
+		TyresSurfaceTemperatureRL: uint8(data[28]),
+		TyresSurfaceTemperatureRR: uint8(data[29]),
+		TyresSurfaceTemperatureFL: uint8(data[30]),
+		TyresSurfaceTemperatureFR: uint8(data[31]),
+		TyresInnerTemperatureRL:   uint8(data[32]),
+		TyresInnerTemperatureRR:   uint8(data[33]),
+		TyresInnerTemperatureFL:   uint8(data[34]),
+		TyresInnerTemperatureFR:   uint8(data[35]),
+		EngineTemperature:         binary.LittleEndian.Uint16(data[36:38]),
+		TyresPressureRL:           convertToFloat32(data[38:42]),
+		TyresPressureRR:           convertToFloat32(data[42:46]),
+		TyresPressureFL:           convertToFloat32(data[46:50]),
+		TyresPressureFR:           convertToFloat32(data[50:54]),
+		SurfaceTypeRL:             uint8(data[54]),
+		SurfaceTypeRR:             uint8(data[55]),
+		SurfaceTypeFL:             uint8(data[56]),
+		SurfaceTypeFR:             uint8(data[57]),
 	}
 
 	return carTelemetryData, nil
@@ -643,11 +622,17 @@ func ToCarStatusData(data []byte) (*CarStatusData, error) {
 		MaxGears:                uint8(data[21]),
 		DrsAllowed:              uint8(data[22]),
 		DrsActivationDistance:   binary.LittleEndian.Uint16(data[23:25]),
-		TyresWear:               convertTo4LengthUint8Array(data[25:29]),
+		TyresWearRL:             uint8(data[25]),
+		TyresWearRR:             uint8(data[26]),
+		TyresWearFL:             uint8(data[27]),
+		TyresWearFR:             uint8(data[28]),
 		ActualTyreCompound:      uint8(data[29]),
 		VisualTyreCompound:      uint8(data[30]),
 		TyresAgeLaps:            uint8(data[31]),
-		TyresDamage:             convertTo4LengthUint8Array(data[32:36]),
+		TyresDamageRL:           uint8(data[32]),
+		TyresDamageRR:           uint8(data[33]),
+		TyresDamageFL:           uint8(data[34]),
+		TyresDamageFR:           uint8(data[35]),
 		FrontLeftWingDamage:     uint8(data[36]),
 		FrontRightWingDamage:    uint8(data[37]),
 		RearWingDamage:          uint8(data[38]),

@@ -350,21 +350,36 @@ type PacketCarSetupData struct {
 // Size: 1307 bytes (Packet size updated in Beta 3)
 // Version: 1
 type CarTelemetryData struct {
-	Speed                   uint16     // Speed of car in kilometres per hour
-	Throttle                float32    // Amount of throttle applied (0.0 to 1.0)
-	Steer                   float32    // Steering (-1.0 (full lock left) to 1.0 (full lock right))
-	Brake                   float32    // Amount of brake applied (0.0 to 1.0)
-	Clutch                  uint8      // Amount of clutch applied (0 to 100)
-	Gear                    int8       // Gear selected (1-8, N=0, R=-1)
-	EngineRPM               uint16     // Engine RPM
-	Drs                     uint8      // 0 = off, 1 = on
-	RevLightsPercent        uint8      // Rev lights indicator (percentage)
-	BrakesTemperature       [4]uint16  // Brakes temperature (celsius)
-	TyresSurfaceTemperature [4]uint8   // Tyres surface temperature (celsius)
-	TyresInnerTemperature   [4]uint8   // Tyres inner temperature (celsius)
-	EngineTemperature       uint16     // Engine temperature (celsius)
-	TyresPressure           [4]float32 // Tyres pressure (PSI)
-	SurfaceType             [4]uint8   // Driving surface, see appendices
+	Speed                     uint16  // Speed of car in kilometres per hour
+	Throttle                  float32 // Amount of throttle applied (0.0 to 1.0)
+	Steer                     float32 // Steering (-1.0 (full lock left) to 1.0 (full lock right))
+	Brake                     float32 // Amount of brake applied (0.0 to 1.0)
+	Clutch                    uint8   // Amount of clutch applied (0 to 100)
+	Gear                      int8    // Gear selected (1-8, N=0, R=-1)
+	EngineRPM                 uint16  // Engine RPM
+	Drs                       uint8   // 0 = off, 1 = on
+	RevLightsPercent          uint8   // Rev lights indicator (percentage)
+	BrakesTemperatureRL       uint16  // Brakes temperature (celsius)
+	BrakesTemperatureRR       uint16
+	BrakesTemperatureFL       uint16
+	BrakesTemperatureFR       uint16
+	TyresSurfaceTemperatureRL uint8 // Tyres surface temperature (celsius)
+	TyresSurfaceTemperatureRR uint8
+	TyresSurfaceTemperatureFL uint8
+	TyresSurfaceTemperatureFR uint8
+	TyresInnerTemperatureRL   uint8 // Tyres inner temperature (celsius)
+	TyresInnerTemperatureRR   uint8
+	TyresInnerTemperatureFL   uint8
+	TyresInnerTemperatureFR   uint8
+	EngineTemperature         uint16  // Engine temperature (celsius)
+	TyresPressureRL           float32 // Tyres pressure (PSI)
+	TyresPressureRR           float32
+	TyresPressureFL           float32
+	TyresPressureFR           float32
+	SurfaceTypeRL             uint8 // Driving surface, see appendices
+	SurfaceTypeRR             uint8
+	SurfaceTypeFL             uint8
+	SurfaceTypeFR             uint8
 }
 
 // PacketCarTelemetryData packet construct for car telemetry data
@@ -417,7 +432,10 @@ type CarStatusData struct {
 	// in [X] metres
 	DrsActivationDistance uint16
 
-	TyresWear [4]uint8 // Tyre wear percentage
+	TyresWearRL uint8 // Tyre wear percentage
+	TyresWearRR uint8
+	TyresWearFL uint8
+	TyresWearFR uint8
 
 	// F1 Modern - 16 = C5, 17 = C4, 18 = C3, 19 = C2, 20 = C1
 	// 7 = inter, 8 = wet
@@ -432,11 +450,14 @@ type CarStatusData struct {
 	// F2 – same as above
 	VisualTyreCompound uint8
 
-	TyresAgeLaps         uint8    // Age in laps of the current set of tyres
-	TyresDamage          [4]uint8 // Tyre damage (percentage)
-	FrontLeftWingDamage  uint8    // Front left wing damage (percentage)
-	FrontRightWingDamage uint8    // Front right wing damage (percentage)
-	RearWingDamage       uint8    // Rear wing damage (percentage)
+	TyresAgeLaps         uint8 // Age in laps of the current set of tyres
+	TyresDamageRL        uint8 // Tyre damage (percentage)
+	TyresDamageRR        uint8
+	TyresDamageFL        uint8
+	TyresDamageFR        uint8
+	FrontLeftWingDamage  uint8 // Front left wing damage (percentage)
+	FrontRightWingDamage uint8 // Front right wing damage (percentage)
+	RearWingDamage       uint8 // Rear wing damage (percentage)
 
 	// Added Beta 3:
 	DrsFault uint8 // Indicator for DRS fault, 0 = OK, 1 = fault
