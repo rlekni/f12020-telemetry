@@ -29,19 +29,6 @@ type RepositoryClient interface {
 	InsertPacketLobbyInfoData(ctx context.Context, packet interface{}) error
 }
 
-const (
-	PacketMotionData              = "packetMotionData"
-	PacketSessionData             = "packetSessionData"
-	PacketLapData                 = "packetLapData"
-	PacketEventData               = "packetEventData"
-	PacketParticipantsData        = "packetParticipantsData"
-	PacketCarSetupData            = "packetCarSetupData"
-	PacketCarTelemetryData        = "packetCarTelemetryData"
-	PacketCarStatusData           = "packetCarStatusData"
-	PacketFinalClassificationData = "packetFinalClassificationData"
-	PacketLobbyInfoData           = "packetLobbyInfoData"
-)
-
 type RepositoryType string
 
 const (

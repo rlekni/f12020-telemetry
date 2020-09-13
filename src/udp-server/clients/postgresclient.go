@@ -76,7 +76,40 @@ func (client PostgreClient) InsertPacketSessionData(ctx context.Context, packet 
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketSessionData, "")
+
+	for _, data := range packetObject.MarshalZones {
+		err = client.insertMarshalZone(ctx, data)
+		helpers.LogIfError(err)
+	}
+
+	for _, data := range packetObject.WeatherForecastSamples {
+		err = client.insertWeatherForecastSample(ctx, data)
+		helpers.LogIfError(err)
+	}
+
+	args := []interface{}{
+		packetObject.Weather,
+		packetObject.TrackTemperature,
+		packetObject.AirTemperature,
+		packetObject.TotalLaps,
+		packetObject.TrackLength,
+		packetObject.SessionType,
+		packetObject.TrackID,
+		packetObject.Formula,
+		packetObject.SessionTimeLeft,
+		packetObject.SessionDuration,
+		packetObject.PitSpeedLimit,
+		packetObject.GamePaused,
+		packetObject.IsSpectating,
+		packetObject.SpectatorCarIndex,
+		packetObject.SliProNativeSupport,
+		packetObject.NumMarshalZones,
+		packetObject.SafetyCarStatus,
+		packetObject.NetworkGame,
+		packetObject.NumWeatherForecastSamples,
+	}
+
+	return client.insert(ctx, PacketSessionData, args...)
 }
 
 func (client PostgreClient) InsertPacketLapData(ctx context.Context, packet interface{}) error {
@@ -151,6 +184,54 @@ func (client PostgreClient) InsertPacketLobbyInfoData(ctx context.Context, packe
 	return client.insert(ctx, PacketLobbyInfoData, "")
 }
 
+func (client PostgreClient) insert(ctx context.Context, packetType string, args ...interface{}) error {
+	var id int
+	sqlStatement, err := getSQLStatement(packetType)
+	if err != nil {
+		return err
+	}
+	err = client.Database.QueryRow(*sqlStatement, args).Scan(&id)
+	helpers.LogIfError(err)
+	return err
+}
+
+func getSQLStatement(packetType string) (*string, error) {
+	var sql string
+	switch packetType {
+	case PacketHeader:
+		sql = packetHeaderSQL
+	case CarMotionData:
+		sql = carMotionDataSQL
+	case PacketMotionData:
+		sql = packetMotionDataSQL
+	case MarshalZone:
+		sql = marshalZoneSQL
+	case WeatherForecastSample:
+		sql = weatherForecastSampleSQL
+	case PacketSessionData:
+		sql = packetSessionDataSQL
+	case PacketLapData:
+		sql = packetLapDataSQL
+	case PacketEventData:
+		sql = packetEventDataSQL
+	case PacketParticipantsData:
+		sql = packetParticipantsDataSQL
+	case PacketCarSetupData:
+		sql = packetCarSetupDataSQL
+	case PacketCarTelemetryData:
+		sql = packetCarTelemetryDataSQL
+	case PacketCarStatusData:
+		sql = packetCarStatusDataSQL
+	case PacketFinalClassificationData:
+		sql = packetFinalClassificationDataSQL
+	case PacketLobbyInfoData:
+		sql = packetLobbyInfoDataSQL
+	default:
+		return nil, fmt.Errorf("PacketType: %s is not valid", packetType)
+	}
+	return &sql, nil
+}
+
 func (client PostgreClient) insertPacketHeader(ctx context.Context, header *f12020packets.PacketHeader) error {
 	args := []interface{}{
 		header.PacketFormat,
@@ -164,7 +245,7 @@ func (client PostgreClient) insertPacketHeader(ctx context.Context, header *f120
 		header.PlayerCarIndex,
 		header.SecondaryPlayerCarIndex,
 	}
-	return client.insert(ctx, "PacketHeader", args...)
+	return client.insert(ctx, PacketHeader, args...)
 }
 
 func (client PostgreClient) insertCarMotionData(ctx context.Context, data f12020packets.CarMotionData) error {
@@ -188,49 +269,24 @@ func (client PostgreClient) insertCarMotionData(ctx context.Context, data f12020
 		data.Pitch,
 		data.Roll,
 	}
-	return client.insert(ctx, "CarMotionData", args...)
+	return client.insert(ctx, CarMotionData, args...)
 }
 
-func (client PostgreClient) insert(ctx context.Context, packetType string, args ...interface{}) error {
-	var id int
-	sqlStatement, err := getSQLStatement(packetType)
-	if err != nil {
-		return err
+func (client PostgreClient) insertMarshalZone(ctx context.Context, data f12020packets.MarshalZone) error {
+	args := []interface{}{
+		data.ZoneStart,
+		data.ZoneFlag,
 	}
-	err = client.Database.QueryRow(*sqlStatement, args).Scan(&id)
-	helpers.LogIfError(err)
-	return err
+	return client.insert(ctx, MarshalZone, args...)
 }
 
-func getSQLStatement(packetType string) (*string, error) {
-	var sql string
-	switch packetType {
-	case "PacketHeader":
-		sql = packetHeaderSQL
-	case "CarMotionData":
-		sql = carMotionDataSQL
-	case PacketMotionData:
-		sql = packetMotionDataSQL
-	case PacketSessionData:
-		sql = packetSessionDataSQL
-	case PacketLapData:
-		sql = packetLapDataSQL
-	case PacketEventData:
-		sql = packetEventDataSQL
-	case PacketParticipantsData:
-		sql = packetParticipantsDataSQL
-	case PacketCarSetupData:
-		sql = packetCarSetupDataSQL
-	case PacketCarTelemetryData:
-		sql = packetCarTelemetryDataSQL
-	case PacketCarStatusData:
-		sql = packetCarStatusDataSQL
-	case PacketFinalClassificationData:
-		sql = packetFinalClassificationDataSQL
-	case PacketLobbyInfoData:
-		sql = packetLobbyInfoDataSQL
-	default:
-		return nil, fmt.Errorf("PacketType: %s is not valid", packetType)
+func (client PostgreClient) insertWeatherForecastSample(ctx context.Context, data f12020packets.WeatherForecastSample) error {
+	args := []interface{}{
+		data.SessionType,
+		data.TimeOffset,
+		data.Weather,
+		data.TrackTemperature,
+		data.AirTemperature,
 	}
-	return &sql, nil
+	return client.insert(ctx, WeatherForecastSample, args...)
 }
