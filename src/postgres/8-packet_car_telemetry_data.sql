@@ -1,4 +1,4 @@
-CREATE TABLE [IF NOT EXISTS] PacketCarTelemetryData (
+CREATE TABLE IF NOT EXISTS PacketCarTelemetryData (
    ID                           uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID              uuid NOT NULL,
    ButtonStatus                 INT NOT NULL,
@@ -7,12 +7,12 @@ CREATE TABLE [IF NOT EXISTS] PacketCarTelemetryData (
    SuggestedGear                INT NOT NULL,
    CreatedOn                    TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] CarTelemetryData (
+CREATE TABLE IF NOT EXISTS CarTelemetryData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketCarTelemetryData_ID  uuid NOT NULL,
    Speed                      INT NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE [IF NOT EXISTS] CarTelemetryData (
    SurfaceTypeFR              INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketCarTelemetryData_ID),
-   FOREIGN KEY (PacketCarTelemetryData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketCarTelemetryData_ID)
       REFERENCES PacketCarTelemetryData (ID)
 );

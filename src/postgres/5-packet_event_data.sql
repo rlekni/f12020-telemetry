@@ -1,60 +1,60 @@
-CREATE TABLE [IF NOT EXISTS] PacketEventData (
+CREATE TABLE IF NOT EXISTS PacketEventData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
    EventStringCode            VARCHAR(50) NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] FastestLap (
+CREATE TABLE IF NOT EXISTS FastestLap (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketEventData_ID         uuid NOT NULL,
    VehicleIdx                 INT NOT NULL,
    LapTime                    FLOAT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketEventData_ID),
-   FOREIGN KEY (PacketEventData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketEventData_ID)
       REFERENCES PacketEventData (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] Retirement (
+CREATE TABLE IF NOT EXISTS Retirement (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketEventData_ID         uuid NOT NULL,
    VehicleIdx                 INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
    
-   PRIMARY KEY (ID, PacketEventData_ID),
-   FOREIGN KEY (PacketEventData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketEventData_ID)
       REFERENCES PacketEventData (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] TeamMateInPits (
+CREATE TABLE IF NOT EXISTS TeamMateInPits (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketEventData_ID         uuid NOT NULL,
    VehicleIdx                 INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketEventData_ID),
-   FOREIGN KEY (PacketEventData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketEventData_ID)
       REFERENCES PacketEventData (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] RaceWinner (
+CREATE TABLE IF NOT EXISTS RaceWinner (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketEventData_ID         uuid NOT NULL,
    VehicleIdx                 INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketEventData_ID),
-   FOREIGN KEY (PacketEventData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketEventData_ID)
       REFERENCES PacketEventData (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] Penalty (
+CREATE TABLE IF NOT EXISTS Penalty (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketEventData_ID         uuid NOT NULL,
    PenaltyType                INT NOT NULL,
@@ -66,19 +66,19 @@ CREATE TABLE [IF NOT EXISTS] Penalty (
    PlacesGained               INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketEventData_ID),
-   FOREIGN KEY (PacketEventData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketEventData_ID)
       REFERENCES PacketEventData (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] SpeedTrap (
+CREATE TABLE IF NOT EXISTS SpeedTrap (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketEventData_ID         uuid NOT NULL,
    VehicleIdx                 INT NOT NULL,
    Speed                      FLOAT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketEventData_ID),
-   FOREIGN KEY (PacketEventData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketEventData_ID)
       REFERENCES PacketEventData (ID)
 );

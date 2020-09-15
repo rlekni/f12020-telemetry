@@ -3,7 +3,6 @@ services:
   postgres:
     # image: arm64v8/postgres:13-alpine
     image: postgres:13-alpine
-    # build: ./src/postgres
     restart: always
     container_name: postgres
     hostname: postgres
@@ -19,6 +18,7 @@ services:
       - bridge
   pgadmin:
     image: dpage/pgadmin4:latest
+    container_name: pgadmin4
     restart: always
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@telemetry.com

@@ -1,14 +1,14 @@
-CREATE TABLE [IF NOT EXISTS] PacketCarStatusData (
+CREATE TABLE IF NOT EXISTS PacketCarStatusData (
    ID                           uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID              uuid NOT NULL,
    CreatedOn                    TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] CarStatusData (
+CREATE TABLE IF NOT EXISTS CarStatusData (
    ID                           uuid DEFAULT uuid_generate_v4 (),
    PacketCarStatusData_ID       uuid NOT NULL,
    TractionControl              INT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE [IF NOT EXISTS] CarStatusData (
    ErsDeployedThisLap           FLOAT NOT NULL,
    CreatedOn                    TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketCarStatusData_ID),
-   FOREIGN KEY (PacketCarStatusData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketCarStatusData_ID)
       REFERENCES PacketCarStatusData (ID)
 );

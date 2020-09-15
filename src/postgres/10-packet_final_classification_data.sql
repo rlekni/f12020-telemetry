@@ -1,15 +1,15 @@
-CREATE TABLE [IF NOT EXISTS] PacketFinalClassificationData (
+CREATE TABLE IF NOT EXISTS PacketFinalClassificationData (
    ID                           uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID              uuid NOT NULL,
    NumCars                      INT NOT NULL,
    CreatedOn                    TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] FinalClassificationData (
+CREATE TABLE IF NOT EXISTS FinalClassificationData (
    ID                                 uuid DEFAULT uuid_generate_v4 (),
    PacketFinalClassificationData_ID   uuid NOT NULL,
    Position                           INT NOT NULL,
@@ -23,11 +23,11 @@ CREATE TABLE [IF NOT EXISTS] FinalClassificationData (
    PenaltiesTime                      INT NOT NULL,
    NumPenalties                       INT NOT NULL,
    NumTyreStints                      INT NOT NULL,
-   NumCars                            INT[] NOT NULL,
-   NumCars                            INT[] NOT NULL,
+   TyreStintsActual                   INT[] NOT NULL,
+   TyreStintsVisual                   INT[] NOT NULL,
    CreatedOn                          TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketFinalClassificationData_ID),
-   FOREIGN KEY (PacketFinalClassificationData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketFinalClassificationData_ID)
       REFERENCES PacketFinalClassificationData (ID)
 );

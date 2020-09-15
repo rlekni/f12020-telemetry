@@ -1,15 +1,15 @@
-CREATE TABLE [IF NOT EXISTS] PacketParticipantsData (
+CREATE TABLE IF NOT EXISTS PacketParticipantsData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
    NumActiveCars              INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
    
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] ParticipantData (
+CREATE TABLE IF NOT EXISTS ParticipantData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketParticipantsData_ID  uuid NOT NULL,
    AiControlled               INT NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE [IF NOT EXISTS] ParticipantData (
    YourTelemetry              INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketParticipantsData_ID),
-   FOREIGN KEY (PacketParticipantsData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketParticipantsData_ID)
       REFERENCES PacketParticipantsData (ID)
 );

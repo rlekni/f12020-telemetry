@@ -1,4 +1,4 @@
-CREATE TABLE [IF NOT EXISTS] PacketSessionData (
+CREATE TABLE IF NOT EXISTS PacketSessionData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
    Weather                    INT NOT NULL,
@@ -21,24 +21,24 @@ CREATE TABLE [IF NOT EXISTS] PacketSessionData (
    NetworkGame                INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] MarshalZone (
+CREATE TABLE IF NOT EXISTS MarshalZone (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketSessionData_ID       uuid NOT NULL,
    ZoneStart                  FLOAT NOT NULL,
    ZoneFlag                   FLOAT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketSessionData_ID),
-   FOREIGN KEY (PacketSessionData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketSessionData_ID)
       REFERENCES PacketSessionData (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] WeatherForecastSample (
+CREATE TABLE IF NOT EXISTS WeatherForecastSample (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketSessionData_ID       uuid NOT NULL,
    SessionType                INT NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE [IF NOT EXISTS] WeatherForecastSample (
    AirTemperature             INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketSessionData_ID),
-   FOREIGN KEY (PacketSessionData_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketSessionData_ID)
       REFERENCES PacketSessionData (ID)
 );

@@ -1,14 +1,14 @@
-CREATE TABLE [IF NOT EXISTS] PacketLapData (
+CREATE TABLE IF NOT EXISTS PacketLapData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
    CreatedOn                  TIMESTAMPTZ,
 
-   PRIMARY KEY (ID, PacketHeader_ID),
-   FOREIGN KEY (PacketHeader_ID),
+   PRIMARY KEY (ID),
+   FOREIGN KEY (PacketHeader_ID)
       REFERENCES PacketHeader (ID)
 );
 
-CREATE TABLE [IF NOT EXISTS] LapData (
+CREATE TABLE IF NOT EXISTS LapData (
   ID                          uuid DEFAULT uuid_generate_v4 (),
   PacketLapData_ID            uuid NOT NULL,
   LastLapTime                 FLOAT NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE [IF NOT EXISTS] LapData (
   ResultStatus                FLOAT NOT NULL,
   CreatedOn                   TIMESTAMPTZ,
 
-  PRIMARY KEY (ID, PacketLapData_ID),
-   FOREIGN KEY (PacketLapData_ID),
+  PRIMARY KEY (ID),
+   FOREIGN KEY (PacketLapData_ID)
       REFERENCES PacketLapData (ID)      
 )
