@@ -14,7 +14,7 @@ services:
       - POSTGRES_DB=f12020telemetry
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/postgres/init.sql:/docker-entrypoint-initdb.d/tables.sql
+      - ./src/postgres:/docker-entrypoint-initdb.d
     networks:
       - bridge
   pgadmin:
