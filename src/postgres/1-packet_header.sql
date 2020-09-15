@@ -15,9 +15,11 @@ CREATE TABLE IF NOT EXISTS PacketHeader (
    PRIMARY KEY (ID)
 );
 
--- CREATE OR REPLACE PROCEDURE insert_packet_header("PacketFormat" INTEGER, "GameMajorVersion" INTEGER, "GameMinorVersion" INTEGER, "PacketVersion" INTEGER, "PacketID" INTEGER, "SessionUID" VARCHAR(250), "SessionTime" FLOAT, "FrameIdentifier" INTEGER, "PlayerCarIndex" INTEGER, "SecondaryPlayerCarIndex" INTEGER)
--- LANGUAGE PLPGSQL
--- AS $$
---   INSERT INTO PacketHeader 
--- 	VALUES ("PacketFormat", "GameMajorVersion", "GameMinorVersion", "PacketVersion", "PacketID", "SessionUID", "SessionTime", "FrameIdentifier", "PlayerCarIndex", "SecondaryPlayerCarIndex");
--- $$;
+CREATE OR REPLACE PROCEDURE insert_packet_header("PacketFormat" integer, "GameMajorVersion" integer, "GameMinorVersion" integer, "PacketVersion" integer, "PacketID" integer, "SessionUID" text, "SessionTime" double precision, "FrameIdentifier" integer, "PlayerCarIndex" integer, "SecondaryPlayerCarIndex" integer)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketHeader 
+		VALUES ("PacketFormat", "GameMajorVersion", "GameMinorVersion", "PacketVersion", "PacketID", "SessionUID", "SessionTime", "FrameIdentifier", "PlayerCarIndex", "SecondaryPlayerCarIndex");
+	END;
+$BODY$;
