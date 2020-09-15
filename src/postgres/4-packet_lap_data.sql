@@ -1,12 +1,16 @@
 CREATE TABLE [IF NOT EXISTS] PacketLapData (
-   ID                         SERIAL PRIMARY KEY,
-   PacketHeader_ID            SERIAL FOREIGN KEY,
-   CreatedOn                  TIMESTAMPTZ
+   ID                         uuid DEFAULT uuid_generate_v4 (),
+   PacketHeader_ID            uuid NOT NULL,
+   CreatedOn                  TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketHeader_ID),
+   FOREIGN KEY (PacketHeader_ID),
+      REFERENCES PacketHeader (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] LapData (
-  ID                          SERIAL PRIMARY KEY,
-  PacketLapData_ID            SERIAL FOREIGN KEY,
+  ID                          uuid DEFAULT uuid_generate_v4 (),
+  PacketLapData_ID            uuid NOT NULL,
   LastLapTime                 FLOAT NOT NULL,
   CurrentLapTime              FLOAT NOT NULL,
   Sector1TimeInMS             INT NOT NULL,
@@ -34,5 +38,9 @@ CREATE TABLE [IF NOT EXISTS] LapData (
   GridPosition                FLOAT NOT NULL,
   DriverStatus                FLOAT NOT NULL,
   ResultStatus                FLOAT NOT NULL,
-  CreatedOn                   TIMESTAMPTZ           
+  CreatedOn                   TIMESTAMPTZ,
+
+  PRIMARY KEY (ID, PacketLapData_ID),
+   FOREIGN KEY (PacketLapData_ID),
+      REFERENCES PacketLapData (ID)      
 )

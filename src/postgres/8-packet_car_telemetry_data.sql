@@ -1,16 +1,20 @@
 CREATE TABLE [IF NOT EXISTS] PacketCarTelemetryData (
-   ID                           SERIAL PRIMARY KEY,
-   PacketHeader_ID              SERIAL FOREIGN KEY,
+   ID                           uuid DEFAULT uuid_generate_v4 (),
+   PacketHeader_ID              uuid NOT NULL,
    ButtonStatus                 INT NOT NULL,
    MfdPanelIndex                INT NOT NULL,
    MfdPanelIndexSecondaryPlayer INT NOT NULL,
    SuggestedGear                INT NOT NULL,
-   CreatedOn                    TIMESTAMPTZ
+   CreatedOn                    TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketHeader_ID),
+   FOREIGN KEY (PacketHeader_ID),
+      REFERENCES PacketHeader (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] CarTelemetryData (
-   ID                         SERIAL PRIMARY KEY,
-   PacketCarTelemetryData_ID  SERIAL FOREIGN KEY,
+   ID                         uuid DEFAULT uuid_generate_v4 (),
+   PacketCarTelemetryData_ID  uuid NOT NULL,
    Speed                      INT NOT NULL,
    Throttle                   FLOAT NOT NULL,
    Steer                      FLOAT NOT NULL,
@@ -41,5 +45,9 @@ CREATE TABLE [IF NOT EXISTS] CarTelemetryData (
    SurfaceTypeRR              INT NOT NULL,
    SurfaceTypeFL              INT NOT NULL,
    SurfaceTypeFR              INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ
+   CreatedOn                  TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketCarTelemetryData_ID),
+   FOREIGN KEY (PacketCarTelemetryData_ID),
+      REFERENCES PacketCarTelemetryData (ID)
 );

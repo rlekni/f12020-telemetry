@@ -1,12 +1,16 @@
 CREATE TABLE [IF NOT EXISTS] PacketCarStatusData (
-   ID                           SERIAL PRIMARY KEY,
-   PacketHeader_ID              SERIAL FOREIGN KEY,
-   CreatedOn                    TIMESTAMPTZ
+   ID                           uuid DEFAULT uuid_generate_v4 (),
+   PacketHeader_ID              uuid NOT NULL,
+   CreatedOn                    TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketHeader_ID),
+   FOREIGN KEY (PacketHeader_ID),
+      REFERENCES PacketHeader (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] CarStatusData (
-   ID                           SERIAL PRIMARY KEY,
-   PacketCarStatusData_ID       SERIAL FOREIGN KEY,
+   ID                           uuid DEFAULT uuid_generate_v4 (),
+   PacketCarStatusData_ID       uuid NOT NULL,
    TractionControl              INT NOT NULL,
    AntiLockBrakes               INT NOT NULL,
    FuelMix                      INT NOT NULL,
@@ -43,5 +47,9 @@ CREATE TABLE [IF NOT EXISTS] CarStatusData (
    ErsHarvestedThisLapMGUK      FLOAT NOT NULL,
    ErsHarvestedThisLapMGUH      FLOAT NOT NULL,
    ErsDeployedThisLap           FLOAT NOT NULL,
-   CreatedOn                    TIMESTAMPTZ
+   CreatedOn                    TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketCarStatusData_ID),
+   FOREIGN KEY (PacketCarStatusData_ID),
+      REFERENCES PacketCarStatusData (ID)
 );

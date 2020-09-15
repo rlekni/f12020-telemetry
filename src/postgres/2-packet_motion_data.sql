@@ -1,6 +1,6 @@
 CREATE TABLE [IF NOT EXISTS] PacketMotionData (
-   ID                         SERIAL PRIMARY KEY,
-   PacketHeader_ID            SERIAL FOREIGN KEY,
+   ID                         uuid DEFAULT uuid_generate_v4 (),
+   PacketHeader_ID            uuid NOT NULL,
    SuspensionPositionRL       FLOAT NOT NULL,
    SuspensionPositionRR       FLOAT NOT NULL,
    SuspensionPositionFL       FLOAT NOT NULL,
@@ -31,12 +31,16 @@ CREATE TABLE [IF NOT EXISTS] PacketMotionData (
    AngularAccelerationY       FLOAT NOT NULL,
    AngularAccelerationZ       FLOAT NOT NULL,
    FrontWheelsAngle           FLOAT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ
+   CreatedOn                  TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketHeader_ID),
+   FOREIGN KEY (PacketHeader_ID),
+      REFERENCES PacketHeader (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] CarMotionData (
-   ID                   SERIAL PRIMARY KEY,
-   PacketMotionData_ID  SERIAL FOREIGN KEY,
+   ID                   uuid DEFAULT uuid_generate_v4 (),
+   PacketMotionData_ID  uuid NOT NULL,
    WorldPositionX       FLOAT NOT NULL,
    WorldPositionY       FLOAT NOT NULL,
    WorldPositionZ       FLOAT NOT NULL,
@@ -55,5 +59,9 @@ CREATE TABLE [IF NOT EXISTS] CarMotionData (
    Yaw                  FLOAT NOT NULL,
    Pitch                FLOAT NOT NULL,
    Roll                 FLOAT NOT NULL,
-   CreatedOn            TIMESTAMPTZ
+   CreatedOn            TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketMotionData_ID),
+   FOREIGN KEY (PacketMotionData_ID),
+      REFERENCES PacketMotionData (ID)
 );

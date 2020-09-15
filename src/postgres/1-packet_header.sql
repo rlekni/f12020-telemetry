@@ -1,5 +1,5 @@
 CREATE TABLE [IF NOT EXISTS] PacketHeader (
-   ID                      SERIAL PRIMARY KEY,
+   ID                      uuid DEFAULT uuid_generate_v4 (),
    PacketFormat            INT NOT NULL,
    GameMajorVersion        INT NOT NULL,
    GameMinorVersion        INT NOT NULL,
@@ -10,7 +10,9 @@ CREATE TABLE [IF NOT EXISTS] PacketHeader (
    FrameIdentifier         INT NOT NULL,
    PlayerCarIndex          INT NOT NULL,
    SecondaryPlayerCarIndex INT NOT NULL,
-   CreatedOn               TIMESTAMPTZ
+   CreatedOn               TIMESTAMPTZ,
+
+   PRIMARY KEY (ID)
 );
 
 CREATE OR REPLACE PROCEDURE insert_packet_header("PacketFormat" INTEGER, "GameMajorVersion" INTEGER, "GameMinorVersion" INTEGER, "PacketVersion" INTEGER, "PacketID" INTEGER, "SessionUID" VARCHAR(250), "SessionTime" FLOAT, "FrameIdentifier" INTEGER, "PlayerCarIndex" INTEGER, "SecondaryPlayerCarIndex" INTEGER)

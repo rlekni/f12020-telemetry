@@ -1,17 +1,25 @@
 CREATE TABLE [IF NOT EXISTS] PacketLobbyInfoData (
-   ID                           SERIAL PRIMARY KEY,
-   PacketHeader_ID              SERIAL FOREIGN KEY,
+   ID                           uuid DEFAULT uuid_generate_v4 (),
+   PacketHeader_ID              uuid NOT NULL,
    NumPlayers                   INT NOT NULL,
-   CreatedOn                    TIMESTAMPTZ
+   CreatedOn                    TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketHeader_ID),
+   FOREIGN KEY (PacketHeader_ID),
+      REFERENCES PacketHeader (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] LobbyInfoData (
-   ID                           SERIAL PRIMARY KEY,
-   PacketLobbyInfoData_ID       SERIAL FOREIGN KEY,
+   ID                           uuid DEFAULT uuid_generate_v4 (),
+   PacketLobbyInfoData_ID       uuid NOT NULL,
    AiControlled                 INT NOT NULL,
    TeamID                       INT NOT NULL,
    Nationality                  INT NOT NULL,
    Name                         VARCHAR(48) NOT NULL,
    ReadyStatus                  INT NOT NULL,
-   CreatedOn                    TIMESTAMPTZ
+   CreatedOn                    TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketLobbyInfoData_ID),
+   FOREIGN KEY (PacketLobbyInfoData_ID),
+      REFERENCES PacketLobbyInfoData (ID)
 );

@@ -1,6 +1,6 @@
 CREATE TABLE [IF NOT EXISTS] PacketSessionData (
-   ID                         SERIAL PRIMARY KEY,
-   PacketHeader_ID            SERIAL FOREIGN KEY,
+   ID                         uuid DEFAULT uuid_generate_v4 (),
+   PacketHeader_ID            uuid NOT NULL,
    Weather                    INT NOT NULL,
    TrackTemperature           INT NOT NULL,
    AirTemperature             INT NOT NULL,
@@ -19,24 +19,36 @@ CREATE TABLE [IF NOT EXISTS] PacketSessionData (
    NumMarshalZones            INT NOT NULL,
    SafetyCarStatus            INT NOT NULL,
    NetworkGame                INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ
+   CreatedOn                  TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketHeader_ID),
+   FOREIGN KEY (PacketHeader_ID),
+      REFERENCES PacketHeader (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] MarshalZone (
-   ID                         SERIAL PRIMARY KEY,
-   PacketSessionData_ID       SERIAL FOREIGN KEY,
+   ID                         uuid DEFAULT uuid_generate_v4 (),
+   PacketSessionData_ID       uuid NOT NULL,
    ZoneStart                  FLOAT NOT NULL,
    ZoneFlag                   FLOAT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ
+   CreatedOn                  TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketSessionData_ID),
+   FOREIGN KEY (PacketSessionData_ID),
+      REFERENCES PacketSessionData (ID)
 );
 
 CREATE TABLE [IF NOT EXISTS] WeatherForecastSample (
-   ID                         SERIAL PRIMARY KEY,
-   PacketSessionData_ID       SERIAL FOREIGN KEY,
+   ID                         uuid DEFAULT uuid_generate_v4 (),
+   PacketSessionData_ID       uuid NOT NULL,
    SessionType                INT NOT NULL,
    TimeOffset                 INT NOT NULL,
    Weather                    INT NOT NULL,
    TrackTemperature           INT NOT NULL,
    AirTemperature             INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ
+   CreatedOn                  TIMESTAMPTZ,
+
+   PRIMARY KEY (ID, PacketSessionData_ID),
+   FOREIGN KEY (PacketSessionData_ID),
+      REFERENCES PacketSessionData (ID)
 );
