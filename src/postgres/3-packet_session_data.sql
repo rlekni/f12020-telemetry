@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS PacketSessionData (
    NumMarshalZones            INT NOT NULL,
    SafetyCarStatus            INT NOT NULL,
    NetworkGame                INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketHeader_ID)
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS MarshalZone (
    PacketSessionData_ID       uuid NOT NULL,
    ZoneStart                  FLOAT NOT NULL,
    ZoneFlag                   FLOAT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketSessionData_ID)
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS WeatherForecastSample (
    Weather                    INT NOT NULL,
    TrackTemperature           INT NOT NULL,
    AirTemperature             INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketSessionData_ID)

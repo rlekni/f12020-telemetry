@@ -18,57 +18,21 @@ const (
 )
 
 const (
-	packetHeaderSQL = `
-	INSERT INTO PacketHeader (PacketFormat, GameMajorVersion, GameMinorVersion, PacketVersion, PacketID, SessionUID, SessionTime, FrameIdentifier, PlayerCarIndex, SecondaryPlayerCarIndex)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-	RETURNING id`
+	packetHeaderSQL = `CALL public.insert_packet_header($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
 
-	carMotionDataSQL = `
-	INSERT INTO CarMotionData (WorldPositionX, WorldPositionY, WorldPositionZ, WorldVelocityX, WorldVelocityY, WorldVelocityZ, WorldForwardDirX, WorldForwardDirY, WorldForwardDirZ, WorldRightDirX, WorldRightDirY, WorldRightDirZ, GForceLateral, GForceLongitudinal, GForceVertical, Yaw, Pitch, Roll)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-	RETURNING id`
-	packetMotionDataSQL = `
-	INSERT INTO PacketMotionData (SuspensionPositionRL, SuspensionPositionRR, SuspensionPositionFL, SuspensionPositionFR, SuspensionVelocityRL, SuspensionVelocityRR, SuspensionVelocityFL, SuspensionVelocityFR, SuspensionAccelerationRL, SuspensionAccelerationRR, SuspensionAccelerationFL, SuspensionAccelerationFR, WheelSpeedRL, WheelSpeedRR, WheelSpeedFL, WheelSpeedFR, WheelSlipRL, WheelSlipRR, WheelSlipFL, WheelSlipFR, LocalVelocityX, LocalVelocityY, LocalVelocityZ, AngularVelocityX, AngularVelocityY, AngularVelocityZ, AngularAccelerationX, AngularAccelerationY, AngularAccelerationZ, FrontWheelsAngle)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30)
-	RETURNING id`
+	carMotionDataSQL    = `CALL public.insert_car_motion_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`
+	packetMotionDataSQL = `CALL public.insert_packet_motion_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30)`
 
-	marshalZoneSQL           = ``
-	weatherForecastSampleSQL = ``
+	marshalZoneSQL           = `CALL public.insert_marshal_zone($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	weatherForecastSampleSQL = `CALL public.insert_weather_forecast_sample($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetSessionDataSQL     = `CALL public.insert_packet_session_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 
-	packetSessionDataSQL = `
-	INSERT INTO PacketSessionData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetLapDataSQL = `
-	INSERT INTO PacketLapData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetEventDataSQL = `
-	INSERT INTO PacketEventData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetParticipantsDataSQL = `
-	INSERT INTO PacketParticipantsData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetCarSetupDataSQL = `
-	INSERT INTO PacketCarSetupData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetCarTelemetryDataSQL = `
-	INSERT INTO PacketCarTelemetryData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetCarStatusDataSQL = `
-	INSERT INTO PacketCarStatusData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetFinalClassificationDataSQL = `
-	INSERT INTO PacketFinalClassificationData (type)
-	VALUES ($1)
-	RETURNING id`
-	packetLobbyInfoDataSQL = `
-	INSERT INTO PacketLobbyInfoData (type)
-	VALUES ($1)
-	RETURNING id`
+	packetLapDataSQL                 = `CALL public.insert_packet_lap_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetEventDataSQL               = `CALL public.insert_packet_event_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetParticipantsDataSQL        = `CALL public.insert_packet_participants_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetCarSetupDataSQL            = `CALL public.insert_packet_car_setup_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetCarTelemetryDataSQL        = `CALL public.insert_packet_car_telemetry_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetCarStatusDataSQL           = `CALL public.insert_packet_car_status_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetFinalClassificationDataSQL = `CALL public.insert_packet_final_classification_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+	packetLobbyInfoDataSQL           = `CALL public.insert_packet_lobby_info_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
 )

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS PacketCarSetupData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketHeader_ID)
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS CarSetupData (
    FrontRightTyrePressure     FLOAT NOT NULL,
    Ballast                    INT NOT NULL,
    FuelLoad                   FLOAT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketCarSetupData_ID)

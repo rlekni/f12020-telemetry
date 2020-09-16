@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS PacketFinalClassificationData (
    ID                           uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID              uuid NOT NULL,
    NumCars                      INT NOT NULL,
-   CreatedOn                    TIMESTAMPTZ,
+   CreatedOn                    TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketHeader_ID)
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS FinalClassificationData (
    NumTyreStints                      INT NOT NULL,
    TyreStintsActual                   INT[] NOT NULL,
    TyreStintsVisual                   INT[] NOT NULL,
-   CreatedOn                          TIMESTAMPTZ,
+   CreatedOn                          TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketFinalClassificationData_ID)

@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS PacketMotionData (
    AngularAccelerationY       FLOAT NOT NULL,
    AngularAccelerationZ       FLOAT NOT NULL,
    FrontWheelsAngle           FLOAT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketHeader_ID)
@@ -59,9 +59,28 @@ CREATE TABLE IF NOT EXISTS CarMotionData (
    Yaw                  FLOAT NOT NULL,
    Pitch                FLOAT NOT NULL,
    Roll                 FLOAT NOT NULL,
-   CreatedOn            TIMESTAMPTZ,
+   CreatedOn            TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketMotionData_ID)
       REFERENCES PacketMotionData (ID)
 );
+
+CREATE OR REPLACE PROCEDURE insert_packet_motion_data("PacketHeader_ID" uuid, "SuspensionPositionRL" double precision, "SuspensionPositionRR" double precision, "SuspensionPositionFL" double precision, "SuspensionPositionFR" double precision, "SuspensionVelocityRL" double precision, "SuspensionVelocityRR" double precision, "SuspensionVelocityFL" double precision, "SuspensionVelocityFR" double precision, "SuspensionAccelerationRL" double precision, "SuspensionAccelerationRR" double precision, "SuspensionAccelerationFL" double precision, "SuspensionAccelerationFR" double precision, "WheelSpeedRL" double precision, "WheelSpeedRR" double precision, "WheelSpeedFL" double precision, "WheelSpeedFR" double precision, "WheelSlipRL" double precision, "WheelSlipRR" double precision, "WheelSlipFL" double precision, "WheelSlipFR" double precision, "LocalVelocityX" double precision, "LocalVelocityY" double precision, "LocalVelocityZ" double precision, "AngularVelocityX" double precision, "AngularVelocityY" double precision, "AngularVelocityZ" double precision, "AngularAccelerationX" double precision, "AngularAccelerationY" double precision, "AngularAccelerationZ" double precision, "FrontWheelsAngle" double precision)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketHeader 
+		VALUES ("ID", "PacketHeader_ID", "SuspensionPositionRL", "SuspensionPositionRR", "SuspensionPositionFL", "SuspensionPositionFR", "SuspensionVelocityRL", "SuspensionVelocityRR", "SuspensionVelocityFL", "SuspensionVelocityFR", "SuspensionAccelerationRL", "SuspensionAccelerationRR", "SuspensionAccelerationFL", "SuspensionAccelerationFR", "WheelSpeedRL", "WheelSpeedRR", "WheelSpeedFL", "WheelSpeedFR", "WheelSlipRL", "WheelSlipRR", "WheelSlipFL", "WheelSlipFR", "LocalVelocityX", "LocalVelocityY", "LocalVelocityZ", "AngularVelocityX", "AngularVelocityY", "AngularVelocityZ", "AngularAccelerationX", "AngularAccelerationY", "AngularAccelerationZ", "FrontWheelsAngle");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_car_motion_data("ID" uuid, "PacketMotionData_ID" uuid, "WorldPositionX" double precision, "WorldPositionY" double precision, "WorldPositionZ" double precision, "WorldVelocityX" double precision, "WorldVelocityY" double precision, "WorldVelocityZ" double precision, "WorldForwardDirX" integer, "WorldForwardDirY" integer, "WorldForwardDirZ" integer, "WorldRightDirX" integer, "WorldRightDirY" integer, "WorldRightDirZ" integer, "GForceLateral" double precision, "GForceLongitudinal" double precision, "GForceVertical" double precision, "Yaw" double precision, "Pitch" double precision, "Roll" double precision)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketHeader 
+		VALUES ("ID", "PacketMotionData_ID", "WorldPositionX", "WorldPositionY", "WorldPositionZ", "WorldVelocityX", "WorldVelocityY", "WorldVelocityZ", "WorldForwardDirX", "WorldForwardDirY", "WorldForwardDirZ", "WorldRightDirX", "WorldRightDirY", "WorldRightDirZ", "GForceLateral", "GForceLongitudinal", "GForceVertical", "Yaw", "Pitch", "Roll");
+	END;
+$BODY$;
+

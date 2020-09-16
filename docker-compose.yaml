@@ -18,6 +18,7 @@ services:
       - bridge
   pgadmin:
     image: dpage/pgadmin4:latest
+    # image: biarms/pgadmin4
     container_name: pgadmin4
     restart: always
     environment:

@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS PacketParticipantsData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
    NumActiveCars              INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
    
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketHeader_ID)
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS ParticipantData (
    Nationality                INT NOT NULL,
    Name                       VARCHAR(48) NOT NULL,
    YourTelemetry              INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketParticipantsData_ID)

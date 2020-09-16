@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS PacketCarTelemetryData (
    MfdPanelIndex                INT NOT NULL,
    MfdPanelIndexSecondaryPlayer INT NOT NULL,
    SuggestedGear                INT NOT NULL,
-   CreatedOn                    TIMESTAMPTZ,
+   CreatedOn                    TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketHeader_ID)
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS CarTelemetryData (
    SurfaceTypeRR              INT NOT NULL,
    SurfaceTypeFL              INT NOT NULL,
    SurfaceTypeFR              INT NOT NULL,
-   CreatedOn                  TIMESTAMPTZ,
+   CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
    FOREIGN KEY (PacketCarTelemetryData_ID)
