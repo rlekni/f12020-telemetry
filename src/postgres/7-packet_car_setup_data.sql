@@ -49,11 +49,11 @@ AS $BODY$
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_car_setup_data("ID" uuid, "PacketCarSetupData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_car_setup_data("ID" uuid, "PacketCarSetupData_ID" uuid, "FrontWing" integer, "RearWing" integer, "OnThrottle" integer, "OffThrottle" integer, "FrontCamber" double precision, "RearCamber" double precision, "FrontToe" double precision, "RearToe" double precision, "FrontSuspension" integer, "RearSuspension" integer, "FrontAntiRollBar" integer, "RearAntiRollBar" integer, "FrontSuspensionHeight" integer, "RearSuspensionHeight" integer, "BrakePressure" integer, "BrakeBias" integer, "RearLeftTyrePressure" double precision, "RearRightTyrePressure" double precision, "FrontLeftTyrePressure" double precision, "FrontRightTyrePressure" double precision, "Ballast" integer, "FuelLoad" double precision)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO CarSetupData 
-		VALUES ("ID", "PacketCarSetupData_ID");
+		VALUES ("ID", "PacketCarSetupData_ID", "FrontWing", "RearWing", "OnThrottle", "OffThrottle", "FrontCamber", "RearCamber", "FrontToe", "RearToe", "FrontSuspension", "RearSuspension", "FrontAntiRollBar", "RearAntiRollBar", "FrontSuspensionHeight", "RearSuspensionHeight", "BrakePressure", "BrakeBias", "RearLeftTyrePressure", "RearRightTyrePressure", "FrontLeftTyrePressure", "FrontRightTyrePressure", "Ballast", "FuelLoad");
 	END;
 $BODY$;
