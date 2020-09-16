@@ -53,29 +53,29 @@ CREATE TABLE IF NOT EXISTS WeatherForecastSample (
       REFERENCES PacketSessionData (ID)
 );
 
-CREATE OR REPLACE PROCEDURE insert_packet_session_data("ID" uuid, "PacketHeader_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_packet_session_data("ID" uuid, "PacketHeader_ID" uuid, "Weather" integer, "TrackTemperature" integer, "AirTemperature" integer, "TotalLaps" integer, "TrackLength" integer, "SessionType" integer, "TrackID" integer, "Formula" integer, "SessionTimeLeft" integer, "SessionDuration" integer, "PitSpeedLimit" integer, "GamePaused" integer, "IsSpectating" integer, "SpectatorCarIndex" integer, "SliProNativeSupport" integer, "NumMarshalZones" integer, "SafetyCarStatus" integer, "NetworkGame" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO PacketSessionData 
-		VALUES ("ID", "PacketHeader_ID");
+		VALUES ("ID", "PacketHeader_ID", "Weather", "TrackTemperature", "AirTemperature", "TotalLaps", "TrackLength", "SessionType", "TrackID", "Formula", "SessionTimeLeft", "SessionDuration", "PitSpeedLimit", "GamePaused", "IsSpectating", "SpectatorCarIndex", "SliProNativeSupport", "NumMarshalZones", "SafetyCarStatus", "NetworkGame");
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_marshal_zone("ID" uuid, "PacketSessionData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_marshal_zone("ID" uuid, "PacketSessionData_ID" uuid, "ZoneStart" double precision, "ZoneFlag" double precision)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO MarshalZone 
-		VALUES ("ID", "PacketSessionData_ID");
+		VALUES ("ID", "PacketSessionData_ID", "ZoneStart", "ZoneFlag");
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_weather_forecast_sample("ID" uuid, "PacketSessionData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_weather_forecast_sample("ID" uuid, "PacketSessionData_ID" uuid, "SessionType" integer, "TimeOffset" integer, "Weather" integer, "TrackTemperature" integer, "AirTemperature" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO WeatherForecastSample 
-		VALUES ("ID", "PacketSessionData_ID");
+		VALUES ("ID", "PacketSessionData_ID", "SessionType", "TimeOffset", "Weather", "TrackTemperature", "AirTemperature");
 	END;
 $BODY$;
