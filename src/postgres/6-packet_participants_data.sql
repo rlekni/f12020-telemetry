@@ -26,20 +26,20 @@ CREATE TABLE IF NOT EXISTS ParticipantData (
       REFERENCES PacketParticipantsData (ID)
 );
 
-CREATE OR REPLACE PROCEDURE insert_packet_participants_data("ID" uuid, "PacketHeader_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_packet_participants_data("ID" uuid, "PacketHeader_ID" uuid, "NumActiveCars" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO PacketParticipantsData 
-		VALUES ("ID", "PacketHeader_ID");
+		VALUES ("ID", "PacketHeader_ID", "NumActiveCars");
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_participant_data("ID" uuid, "PacketParticipantsData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_participant_data("ID" uuid, "PacketParticipantsData_ID" uuid, "AiControlled" integer, "DriverID" integer, "TeamID" integer, "RaceNumber" integer, "Nationality" integer, "Name" text, "YourTelemetry" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO ParticipantData 
-		VALUES ("ID", "PacketParticipantsData_ID");
+		VALUES ("ID", "PacketParticipantsData_ID", "AiControlled", "DriverID", "TeamID", "RaceNumber", "Nationality", "Name", "YourTelemetry");
 	END;
 $BODY$;
