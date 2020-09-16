@@ -54,11 +54,11 @@ AS $BODY$
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_lap_data("ID" uuid, "PacketLapData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_lap_data("ID" uuid, "PacketLapData_ID" uuid, "LastLapTime" double precision, "CurrentLapTime" double precision, "Sector1TimeInMS" integer, "Sector2TimeInMS" integer, "BestLapTime" double precision, "BestLapNum" integer, "BestLapSector1TimeInMS" integer, "BestLapSector2TimeInMS" integer, "BestLapSector3TimeInMS" integer, "BestOverallSector1TimeInMS" integer, "BestOverallSector1LapNum" integer, "BestOverallSector2TimeInMS" integer, "BestOverallSector2LapNum" integer, "BestOverallSector3TimeInMS" integer, "BestOverallSector3LapNum" integer, "LapDistance" double precision, "TotalDistance" double precision, "SafetyCarDelta" double precision, "CarPosition" integer, "CurrentLapNum" double precision, "PitStatus" double precision, "Sector" double precision, "CurrentLapInvalid" double precision, "Penalties" double precision, "GridPosition" double precision, "DriverStatus" double precision, "ResultStatus" double precision)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO LapData 
-		VALUES ("ID", "PacketLapData_ID");
+		VALUES ("ID", "PacketLapData_ID", "LastLapTime", "CurrentLapTime", "Sector1TimeInMS", "Sector2TimeInMS", "BestLapTime", "BestLapNum", "BestLapSector1TimeInMS", "BestLapSector2TimeInMS", "BestLapSector3TimeInMS", "BestOverallSector1TimeInMS", "BestOverallSector1LapNum", "BestOverallSector2TimeInMS", "BestOverallSector2LapNum", "BestOverallSector3TimeInMS", "BestOverallSector3LapNum", "LapDistance", "TotalDistance", "SafetyCarDelta", "CarPosition", "CurrentLapNum", "PitStatus", "Sector", "CurrentLapInvalid", "Penalties", "GridPosition", "DriverStatus", "ResultStatus");
 	END;
 $BODY$;
