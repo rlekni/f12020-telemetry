@@ -63,11 +63,11 @@ AS $BODY$
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_car_status_data("ID" uuid, "PacketCarStatusData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_car_status_data("ID" uuid, "PacketCarStatusData_ID" uuid, "TractionControl" integer, "AntiLockBrakes" integer, "FuelMix" integer, "FrontBrakeBias" integer, "PitLimiterStatus" integer, "FuelInTank" double precision, "FuelCapacity" double precision, "FuelRemainingLaps" double precision, "MaxRPM" integer, "IdleRPM" integer, "MaxGears" integer, "DrsAllowed" integer, "DrsActivationDistance" integer, "TyresWearRL" integer, "TyresWearRR" integer, "TyresWearFL" integer, "TyresWearFR" integer, "ActualTyreCompound" integer, "VisualTyreCompound" integer, "TyresAgeLaps" integer, "TyresDamageRL" integer, "TyresDamageRR" integer, "TyresDamageFL" integer, "TyresDamageFR" integer, "FrontLeftWingDamage" integer, "FrontRightWingDamage" integer, "RearWingDamage" integer, "DrsFault" integer, "EngineDamage" integer, "GearBoxDamage" integer, "VehicleFiaFlags" integer, "ErsStoreEnergy" double precision, "ErsDeployMode" integer, "ErsHarvestedThisLapMGUK" double precision, "ErsHarvestedThisLapMGUH" double precision, "ErsDeployedThisLap" double precision)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO CarStatusData 
-		VALUES ("ID", "PacketCarStatusData_ID");
+		VALUES ("ID", "PacketCarStatusData_ID", "TractionControl", "AntiLockBrakes", "FuelMix", "FrontBrakeBias", "PitLimiterStatus", "FuelInTank", "FuelCapacity", "FuelRemainingLaps", "MaxRPM", "IdleRPM", "MaxGears", "DrsAllowed", "DrsActivationDistance", "TyresWearRL", "TyresWearRR", "TyresWearFL", "TyresWearFR", "ActualTyreCompound", "VisualTyreCompound", "TyresAgeLaps", "TyresDamageRL", "TyresDamageRR", "TyresDamageFL", "TyresDamageFR", "FrontLeftWingDamage", "FrontRightWingDamage", "RearWingDamage", "DrsFault", "EngineDamage", "GearBoxDamage", "VehicleFiaFlags", "ErsStoreEnergy", "ErsDeployMode", "ErsHarvestedThisLapMGUK", "ErsHarvestedThisLapMGUH", "ErsDeployedThisLap");
 	END;
 $BODY$;
