@@ -23,3 +23,21 @@ CREATE TABLE IF NOT EXISTS LobbyInfoData (
    FOREIGN KEY (PacketLobbyInfoData_ID)
       REFERENCES PacketLobbyInfoData (ID)
 );
+
+CREATE OR REPLACE PROCEDURE insert_packet_lobby_info_data("ID" uuid, "PacketHeader_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketLobbyInfoData 
+		VALUES ("ID", "PacketHeader_ID");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_lobby_info_data("ID" uuid, "PacketLobbyInfoData_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketLobbyInfoData 
+		VALUES ("ID", "PacketLobbyInfoData_ID");
+	END;
+$BODY$;

@@ -52,3 +52,30 @@ CREATE TABLE IF NOT EXISTS WeatherForecastSample (
    FOREIGN KEY (PacketSessionData_ID)
       REFERENCES PacketSessionData (ID)
 );
+
+CREATE OR REPLACE PROCEDURE insert_packet_session_data("ID" uuid, "PacketHeader_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketSessionData 
+		VALUES ("ID", "PacketHeader_ID");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_marshal_zone("ID" uuid, "PacketSessionData_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO MarshalZone 
+		VALUES ("ID", "PacketSessionData_ID");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_weather_forecast_sample("ID" uuid, "PacketSessionData_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO WeatherForecastSample 
+		VALUES ("ID", "PacketSessionData_ID");
+	END;
+$BODY$;

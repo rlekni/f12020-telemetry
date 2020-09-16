@@ -25,3 +25,21 @@ CREATE TABLE IF NOT EXISTS ParticipantData (
    FOREIGN KEY (PacketParticipantsData_ID)
       REFERENCES PacketParticipantsData (ID)
 );
+
+CREATE OR REPLACE PROCEDURE insert_packet_participants_data("ID" uuid, "PacketHeader_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketParticipantsData 
+		VALUES ("ID", "PacketHeader_ID");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_participant_data("ID" uuid, "PacketParticipantsData_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO ParticipantData 
+		VALUES ("ID", "PacketParticipantsData_ID");
+	END;
+$BODY$;

@@ -31,3 +31,21 @@ CREATE TABLE IF NOT EXISTS FinalClassificationData (
    FOREIGN KEY (PacketFinalClassificationData_ID)
       REFERENCES PacketFinalClassificationData (ID)
 );
+
+CREATE OR REPLACE PROCEDURE insert_packet_final_classification_data("ID" uuid, "PacketHeader_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketFinalClassificationData 
+		VALUES ("ID", "PacketHeader_ID");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_final_classification_data("ID" uuid, "PacketFinalClassificationData_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO FinalClassificationData 
+		VALUES ("ID", "PacketFinalClassificationData_ID");
+	END;
+$BODY$;

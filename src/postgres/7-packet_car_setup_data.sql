@@ -39,3 +39,21 @@ CREATE TABLE IF NOT EXISTS CarSetupData (
    FOREIGN KEY (PacketCarSetupData_ID)
       REFERENCES PacketCarSetupData (ID)
 );
+
+CREATE OR REPLACE PROCEDURE insert_packet_car_setup_data("ID" uuid, "PacketHeader_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO PacketCarSetupData 
+		VALUES ("ID", "PacketHeader_ID");
+	END;
+$BODY$;
+
+CREATE OR REPLACE PROCEDURE insert_car_setup_data("ID" uuid, "PacketCarSetupData_ID" uuid)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	BEGIN
+		INSERT INTO CarSetupData 
+		VALUES ("ID", "PacketCarSetupData_ID");
+	END;
+$BODY$;
