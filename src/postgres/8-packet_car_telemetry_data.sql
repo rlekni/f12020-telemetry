@@ -52,20 +52,20 @@ CREATE TABLE IF NOT EXISTS CarTelemetryData (
       REFERENCES PacketCarTelemetryData (ID)
 );
 
-CREATE OR REPLACE PROCEDURE insert_packet_car_telemetry_data("ID" uuid, "PacketHeader_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_packet_car_telemetry_data("ID" uuid, "PacketHeader_ID" uuid, "ButtonStatus" integer, "MfdPanelIndex" integer, "MfdPanelIndexSecondaryPlayer" integer, "SuggestedGear" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO PacketCarTelemetryData 
-		VALUES ("ID", "PacketHeader_ID");
+		VALUES ("ID", "PacketHeader_ID", "ButtonStatus", "MfdPanelIndex", "MfdPanelIndexSecondaryPlayer", "SuggestedGear");
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_car_telemetry_data("ID" uuid, "PacketCarTelemetryData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_car_telemetry_data("ID" uuid, "PacketCarTelemetryData_ID" uuid, "Speed" integer, "Throttle" double precision, "Steer" double precision, "Brake" double precision, "Clutch" integer, "Gear" integer, "EngineRPM" integer, "Drs" integer, "RevLightsPercent" integer, "BrakesTemperatureRL" integer, "BrakesTemperatureRR" integer, "BrakesTemperatureFL" integer, "BrakesTemperatureFR" integer, "TyresSurfaceTemperatureRL" integer, "TyresSurfaceTemperatureRR" integer, "TyresSurfaceTemperatureFL" integer, "TyresSurfaceTemperatureFR" integer, "TyresInnerTemperatureRL" integer, "TyresInnerTemperatureRR" integer, "TyresInnerTemperatureFL" integer, "TyresInnerTemperatureFR" integer, "EngineTemperature" integer, "TyresPressureRL" double precision, "TyresPressureRR" double precision, "TyresPressureFL" double precision, "TyresPressureFR" double precision, "SurfaceTypeRL" integer, "SurfaceTypeRR" integer, "SurfaceTypeFL" integer, "SurfaceTypeFR" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO CarTelemetryData 
-		VALUES ("ID", "PacketCarTelemetryData_ID");
+		VALUES ("ID", "PacketCarTelemetryData_ID", "Speed", "Throttle", "Steer", "Brake", "Clutch", "Gear", "EngineRPM", "Drs", "RevLightsPercent", "BrakesTemperatureRL", "BrakesTemperatureRR", "BrakesTemperatureFL", "BrakesTemperatureFR", "TyresSurfaceTemperatureRL", "TyresSurfaceTemperatureRR", "TyresSurfaceTemperatureFL", "TyresSurfaceTemperatureFR", "TyresInnerTemperatureRL", "TyresInnerTemperatureRR", "TyresInnerTemperatureFL", "TyresInnerTemperatureFR", "EngineTemperature", "TyresPressureRL", "TyresPressureRR", "TyresPressureFL", "TyresPressureFR", "SurfaceTypeRL", "SurfaceTypeRR", "SurfaceTypeFL", "SurfaceTypeFR");
 	END;
 $BODY$;
