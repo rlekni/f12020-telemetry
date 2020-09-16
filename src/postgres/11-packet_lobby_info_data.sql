@@ -24,20 +24,20 @@ CREATE TABLE IF NOT EXISTS LobbyInfoData (
       REFERENCES PacketLobbyInfoData (ID)
 );
 
-CREATE OR REPLACE PROCEDURE insert_packet_lobby_info_data("ID" uuid, "PacketHeader_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_packet_lobby_info_data("ID" uuid, "PacketHeader_ID" uuid, "NumPlayers" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO PacketLobbyInfoData 
-		VALUES ("ID", "PacketHeader_ID");
+		VALUES ("ID", "PacketHeader_ID", "NumPlayers");
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_lobby_info_data("ID" uuid, "PacketLobbyInfoData_ID" uuid)
+CREATE OR REPLACE PROCEDURE insert_lobby_info_data("ID" uuid, "PacketLobbyInfoData_ID" uuid, "AiControlled" integer, "TeamID" integer, "Nationality" integer, "Name" text, "ReadyStatus" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO PacketLobbyInfoData 
-		VALUES ("ID", "PacketLobbyInfoData_ID");
+		VALUES ("ID", "PacketLobbyInfoData_ID", "AiControlled", "TeamID", "Nationality", "Name", "ReadyStatus");
 	END;
 $BODY$;
