@@ -45,7 +45,7 @@ const (
 	packetMotionDataSQL = `CALL public.insert_packet_motion_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)`
 	carMotionDataSQL    = `CALL public.insert_car_motion_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`
 
-	packetSessionDataSQL     = `CALL public.insert_packet_session_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`
+	packetSessionDataSQL     = `CALL public.insert_packet_session_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`
 	marshalZoneSQL           = `CALL public.insert_marshal_zone($1, $2, $3, $4)`
 	weatherForecastSampleSQL = `CALL public.insert_weather_forecast_sample($1, $2, $3, $4, $5, $6, $7)`
 

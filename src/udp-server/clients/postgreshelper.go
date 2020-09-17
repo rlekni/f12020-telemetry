@@ -9,13 +9,14 @@ import (
 	uuid "github.com/google/uuid"
 )
 
-func (client PostgreClient) insert(ctx context.Context, packetType string, args ...interface{}) error {
-	var id int
+func (client PostgreClient) insert(ctx context.Context, packetType string, args []interface{}) error {
 	sqlStatement, err := getSQLStatement(packetType)
 	if err != nil {
 		return err
 	}
-	err = client.Database.QueryRow(*sqlStatement, args).Scan(&id)
+
+	_, err = client.Database.ExecContext(ctx, *sqlStatement, args...)
+
 	helpers.LogIfError(err)
 	return err
 }
@@ -99,7 +100,7 @@ func (client PostgreClient) insertPacketHeader(ctx context.Context, header *f120
 		header.PlayerCarIndex,
 		header.SecondaryPlayerCarIndex,
 	}
-	return id, client.insert(ctx, PacketHeader, args...)
+	return id, client.insert(ctx, PacketHeader, args)
 }
 
 func (client PostgreClient) insertPacketMotionData(ctx context.Context, data f12020packets.PacketMotionData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -139,7 +140,7 @@ func (client PostgreClient) insertPacketMotionData(ctx context.Context, data f12
 		data.AngularAccelerationZ,
 		data.FrontWheelsAngle,
 	}
-	return id, client.insert(ctx, PacketMotionData, args...)
+	return id, client.insert(ctx, PacketMotionData, args)
 }
 
 func (client PostgreClient) insertCarMotionData(ctx context.Context, data f12020packets.CarMotionData, packetID uuid.UUID) error {
@@ -167,7 +168,7 @@ func (client PostgreClient) insertCarMotionData(ctx context.Context, data f12020
 		data.Pitch,
 		data.Roll,
 	}
-	return client.insert(ctx, CarMotionData, args...)
+	return client.insert(ctx, CarMotionData, args)
 }
 
 func (client PostgreClient) insertPacketSessionData(ctx context.Context, data f12020packets.PacketSessionData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -196,7 +197,7 @@ func (client PostgreClient) insertPacketSessionData(ctx context.Context, data f1
 		data.NetworkGame,
 		data.NumWeatherForecastSamples,
 	}
-	return id, client.insert(ctx, PacketSessionData, args...)
+	return id, client.insert(ctx, PacketSessionData, args)
 }
 
 func (client PostgreClient) insertMarshalZone(ctx context.Context, data f12020packets.MarshalZone, packetID uuid.UUID) error {
@@ -208,7 +209,7 @@ func (client PostgreClient) insertMarshalZone(ctx context.Context, data f12020pa
 		data.ZoneStart,
 		data.ZoneFlag,
 	}
-	return client.insert(ctx, MarshalZone, args...)
+	return client.insert(ctx, MarshalZone, args)
 }
 
 func (client PostgreClient) insertWeatherForecastSample(ctx context.Context, data f12020packets.WeatherForecastSample, packetID uuid.UUID) error {
@@ -223,7 +224,7 @@ func (client PostgreClient) insertWeatherForecastSample(ctx context.Context, dat
 		data.TrackTemperature,
 		data.AirTemperature,
 	}
-	return client.insert(ctx, WeatherForecastSample, args...)
+	return client.insert(ctx, WeatherForecastSample, args)
 }
 
 func (client PostgreClient) insertPacketLapData(ctx context.Context, data f12020packets.PacketLapData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -233,7 +234,7 @@ func (client PostgreClient) insertPacketLapData(ctx context.Context, data f12020
 		id,
 		headerID,
 	}
-	return id, client.insert(ctx, PacketLapData, args...)
+	return id, client.insert(ctx, PacketLapData, args)
 }
 
 func (client PostgreClient) insertLapData(ctx context.Context, data f12020packets.LapData, packetID uuid.UUID) error {
@@ -271,7 +272,7 @@ func (client PostgreClient) insertLapData(ctx context.Context, data f12020packet
 		data.ResultStatus,
 	}
 
-	return client.insert(ctx, LapData, args...)
+	return client.insert(ctx, LapData, args)
 }
 
 func (client PostgreClient) insertPacketEventData(ctx context.Context, data f12020packets.PacketEventData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -283,7 +284,7 @@ func (client PostgreClient) insertPacketEventData(ctx context.Context, data f120
 		data.EventStringCode,
 	}
 
-	return id, client.insert(ctx, PacketEventData, args...)
+	return id, client.insert(ctx, PacketEventData, args)
 }
 
 func (client PostgreClient) insertFastestLap(ctx context.Context, data f12020packets.FastestLap, packetID uuid.UUID) error {
@@ -296,7 +297,7 @@ func (client PostgreClient) insertFastestLap(ctx context.Context, data f12020pac
 		data.LapTime,
 	}
 
-	return client.insert(ctx, FastestLap, args...)
+	return client.insert(ctx, FastestLap, args)
 }
 
 func (client PostgreClient) insertRetirement(ctx context.Context, data f12020packets.Retirement, packetID uuid.UUID) error {
@@ -308,7 +309,7 @@ func (client PostgreClient) insertRetirement(ctx context.Context, data f12020pac
 		data.VehicleIdx,
 	}
 
-	return client.insert(ctx, Retirement, args...)
+	return client.insert(ctx, Retirement, args)
 }
 
 func (client PostgreClient) insertTeamMateInPits(ctx context.Context, data f12020packets.TeamMateInPits, packetID uuid.UUID) error {
@@ -320,7 +321,7 @@ func (client PostgreClient) insertTeamMateInPits(ctx context.Context, data f1202
 		data.VehicleIdx,
 	}
 
-	return client.insert(ctx, TeammateInPits, args...)
+	return client.insert(ctx, TeammateInPits, args)
 }
 
 func (client PostgreClient) insertRaceWinner(ctx context.Context, data f12020packets.RaceWinner, packetID uuid.UUID) error {
@@ -332,7 +333,7 @@ func (client PostgreClient) insertRaceWinner(ctx context.Context, data f12020pac
 		data.VehicleIdx,
 	}
 
-	return client.insert(ctx, RaceWinner, args...)
+	return client.insert(ctx, RaceWinner, args)
 }
 
 func (client PostgreClient) insertPenalty(ctx context.Context, data f12020packets.Penalty, packetID uuid.UUID) error {
@@ -350,7 +351,7 @@ func (client PostgreClient) insertPenalty(ctx context.Context, data f12020packet
 		data.PlacesGained,
 	}
 
-	return client.insert(ctx, Penalty, args...)
+	return client.insert(ctx, Penalty, args)
 }
 
 func (client PostgreClient) insertSpeedTrap(ctx context.Context, data f12020packets.SpeedTrap, packetID uuid.UUID) error {
@@ -363,7 +364,7 @@ func (client PostgreClient) insertSpeedTrap(ctx context.Context, data f12020pack
 		data.Speed,
 	}
 
-	return client.insert(ctx, SpeedTrap, args...)
+	return client.insert(ctx, SpeedTrap, args)
 }
 
 func (client PostgreClient) insertPacketParticipantsData(ctx context.Context, data f12020packets.PacketParticipantsData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -375,7 +376,7 @@ func (client PostgreClient) insertPacketParticipantsData(ctx context.Context, da
 		data.NumActiveCars,
 	}
 
-	return id, client.insert(ctx, PacketParticipantsData, args...)
+	return id, client.insert(ctx, PacketParticipantsData, args)
 }
 
 func (client PostgreClient) insertParticipantData(ctx context.Context, data f12020packets.ParticipantData, packetID uuid.UUID) error {
@@ -393,7 +394,7 @@ func (client PostgreClient) insertParticipantData(ctx context.Context, data f120
 		data.YourTelemetry,
 	}
 
-	return client.insert(ctx, ParticipantData, args...)
+	return client.insert(ctx, ParticipantData, args)
 }
 
 func (client PostgreClient) insertPacketCarSetupData(ctx context.Context, data f12020packets.PacketCarSetupData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -404,7 +405,7 @@ func (client PostgreClient) insertPacketCarSetupData(ctx context.Context, data f
 		headerID,
 	}
 
-	return id, client.insert(ctx, PacketCarSetupData, args...)
+	return id, client.insert(ctx, PacketCarSetupData, args)
 }
 
 func (client PostgreClient) insertCarSetupData(ctx context.Context, data f12020packets.CarSetupData, packetID uuid.UUID) error {
@@ -437,7 +438,7 @@ func (client PostgreClient) insertCarSetupData(ctx context.Context, data f12020p
 		data.FuelLoad,
 	}
 
-	return client.insert(ctx, CarSetupData, args...)
+	return client.insert(ctx, CarSetupData, args)
 }
 
 func (client PostgreClient) insertPacketCarTelemetryData(ctx context.Context, data f12020packets.PacketCarTelemetryData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -452,7 +453,7 @@ func (client PostgreClient) insertPacketCarTelemetryData(ctx context.Context, da
 		data.SuggestedGear,
 	}
 
-	return id, client.insert(ctx, PacketCarTelemetryData, args...)
+	return id, client.insert(ctx, PacketCarTelemetryData, args)
 }
 
 func (client PostgreClient) insertCarTelemetryData(ctx context.Context, data f12020packets.CarTelemetryData, packetID uuid.UUID) error {
@@ -493,7 +494,7 @@ func (client PostgreClient) insertCarTelemetryData(ctx context.Context, data f12
 		data.SurfaceTypeFR,
 	}
 
-	return client.insert(ctx, CarTelemetryData, args...)
+	return client.insert(ctx, CarTelemetryData, args)
 }
 
 func (client PostgreClient) insertPacketCarStatusData(ctx context.Context, data f12020packets.PacketCarStatusData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -504,7 +505,7 @@ func (client PostgreClient) insertPacketCarStatusData(ctx context.Context, data 
 		headerID,
 	}
 
-	return id, client.insert(ctx, PacketCarStatusData, args...)
+	return id, client.insert(ctx, PacketCarStatusData, args)
 }
 
 func (client PostgreClient) insertCarStatusData(ctx context.Context, data f12020packets.CarStatusData, packetID uuid.UUID) error {
@@ -551,7 +552,7 @@ func (client PostgreClient) insertCarStatusData(ctx context.Context, data f12020
 		data.ErsDeployedThisLap,
 	}
 
-	return client.insert(ctx, CarStatusData, args...)
+	return client.insert(ctx, CarStatusData, args)
 }
 
 func (client PostgreClient) insertPacketFinalClassificationData(ctx context.Context, data f12020packets.PacketFinalClassificationData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -563,7 +564,7 @@ func (client PostgreClient) insertPacketFinalClassificationData(ctx context.Cont
 		data.NumCars,
 	}
 
-	return id, client.insert(ctx, PacketFinalClassificationData, args...)
+	return id, client.insert(ctx, PacketFinalClassificationData, args)
 }
 
 func (client PostgreClient) insertFinalClassificationData(ctx context.Context, data f12020packets.FinalClassificationData, packetID uuid.UUID) error {
@@ -583,11 +584,11 @@ func (client PostgreClient) insertFinalClassificationData(ctx context.Context, d
 		data.PenaltiesTime,
 		data.NumPenalties,
 		data.NumTyreStints,
-		data.TyreStintsActual,
-		data.TyreStintsVisual,
+		// data.TyreStintsActual, // Problematic
+		// data.TyreStintsVisual, // Problematic
 	}
 
-	return client.insert(ctx, FinalClassificationData, args...)
+	return client.insert(ctx, FinalClassificationData, args)
 }
 
 func (client PostgreClient) insertPacketLobbyInfoData(ctx context.Context, data f12020packets.PacketLobbyInfoData, headerID uuid.UUID) (uuid.UUID, error) {
@@ -599,7 +600,7 @@ func (client PostgreClient) insertPacketLobbyInfoData(ctx context.Context, data 
 		data.NumPlayers,
 	}
 
-	return id, client.insert(ctx, PacketLobbyInfoData, args...)
+	return id, client.insert(ctx, PacketLobbyInfoData, args)
 }
 
 func (client PostgreClient) insertLobbyInfoData(ctx context.Context, data f12020packets.LobbyInfoData, packetID uuid.UUID) error {
@@ -615,5 +616,5 @@ func (client PostgreClient) insertLobbyInfoData(ctx context.Context, data f12020
 		data.ReadyStatus,
 	}
 
-	return client.insert(ctx, LobbyInfoData, args...)
+	return client.insert(ctx, LobbyInfoData, args)
 }

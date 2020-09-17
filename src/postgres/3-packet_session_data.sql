@@ -53,12 +53,12 @@ CREATE TABLE IF NOT EXISTS WeatherForecastSample (
       REFERENCES PacketSessionData (ID)
 );
 
-CREATE OR REPLACE PROCEDURE insert_packet_session_data("ID" uuid, "PacketHeader_ID" uuid, "Weather" integer, "TrackTemperature" integer, "AirTemperature" integer, "TotalLaps" integer, "TrackLength" integer, "SessionType" integer, "TrackID" integer, "Formula" integer, "SessionTimeLeft" integer, "SessionDuration" integer, "PitSpeedLimit" integer, "GamePaused" integer, "IsSpectating" integer, "SpectatorCarIndex" integer, "SliProNativeSupport" integer, "NumMarshalZones" integer, "SafetyCarStatus" integer, "NetworkGame" integer)
+CREATE OR REPLACE PROCEDURE insert_packet_session_data("ID" uuid, "PacketHeader_ID" uuid, "Weather" integer, "TrackTemperature" integer, "AirTemperature" integer, "TotalLaps" integer, "TrackLength" integer, "SessionType" integer, "TrackID" integer, "Formula" integer, "SessionTimeLeft" integer, "SessionDuration" integer, "PitSpeedLimit" integer, "GamePaused" integer, "IsSpectating" integer, "SpectatorCarIndex" integer, "SliProNativeSupport" integer, "NumMarshalZones" integer, "SafetyCarStatus" integer, "NetworkGame" integer, "NumWeatherForecastSamples" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO PacketSessionData 
-		VALUES ("ID", "PacketHeader_ID", "Weather", "TrackTemperature", "AirTemperature", "TotalLaps", "TrackLength", "SessionType", "TrackID", "Formula", "SessionTimeLeft", "SessionDuration", "PitSpeedLimit", "GamePaused", "IsSpectating", "SpectatorCarIndex", "SliProNativeSupport", "NumMarshalZones", "SafetyCarStatus", "NetworkGame");
+		VALUES ("ID", "PacketHeader_ID", "Weather", "TrackTemperature", "AirTemperature", "TotalLaps", "TrackLength", "SessionType", "TrackID", "Formula", "SessionTimeLeft", "SessionDuration", "PitSpeedLimit", "GamePaused", "IsSpectating", "SpectatorCarIndex", "SliProNativeSupport", "NumMarshalZones", "SafetyCarStatus", "NetworkGame", "NumWeatherForecastSamples");
 	END;
 $BODY$;
 

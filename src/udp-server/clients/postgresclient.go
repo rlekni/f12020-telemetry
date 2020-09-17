@@ -24,13 +24,16 @@ func (client PostgreClient) Insert(ctx context.Context, packetType string, packe
 }
 
 func (client PostgreClient) InsertPacketMotionData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketMotionData)
+	packetObject := packet.(*f12020packets.PacketMotionData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketMotionData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketMotionData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -44,13 +47,16 @@ func (client PostgreClient) InsertPacketMotionData(ctx context.Context, packet i
 }
 
 func (client PostgreClient) InsertPacketSessionData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketSessionData)
+	packetObject := packet.(*f12020packets.PacketSessionData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketSessionData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketSessionData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -69,13 +75,16 @@ func (client PostgreClient) InsertPacketSessionData(ctx context.Context, packet 
 }
 
 func (client PostgreClient) InsertPacketLapData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketLapData)
+	packetObject := packet.(*f12020packets.PacketLapData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketLapData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketLapData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -88,50 +97,71 @@ func (client PostgreClient) InsertPacketLapData(ctx context.Context, packet inte
 }
 
 func (client PostgreClient) InsertPacketEventData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketEventData)
+	packetObject := packet.(*f12020packets.PacketEventData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketEventData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketEventData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
 	switch packetObject.EventStringCode {
 	case "FTLP":
-		data := packetObject.EventDetails.(f12020packets.FastestLap)
-		err = client.insertFastestLap(ctx, data, packetID)
+		data := packetObject.EventDetails.(*f12020packets.FastestLap)
+		if data == nil {
+			return fmt.Errorf("Failed to cast interface. Got nil")
+		}
+		err = client.insertFastestLap(ctx, *data, packetID)
 		if err != nil {
 			return err
 		}
 	case "RTMT":
-		data := packetObject.EventDetails.(f12020packets.Retirement)
-		err = client.insertRetirement(ctx, data, packetID)
+		data := packetObject.EventDetails.(*f12020packets.Retirement)
+		if data == nil {
+			return fmt.Errorf("Failed to cast interface. Got nil")
+		}
+		err = client.insertRetirement(ctx, *data, packetID)
 		if err != nil {
 			return err
 		}
 	case "TMPT":
-		data := packetObject.EventDetails.(f12020packets.TeamMateInPits)
-		err = client.insertTeamMateInPits(ctx, data, packetID)
+		data := packetObject.EventDetails.(*f12020packets.TeamMateInPits)
+		if data == nil {
+			return fmt.Errorf("Failed to cast interface. Got nil")
+		}
+		err = client.insertTeamMateInPits(ctx, *data, packetID)
 		if err != nil {
 			return err
 		}
 	case "RCWN":
-		data := packetObject.EventDetails.(f12020packets.RaceWinner)
-		err = client.insertRaceWinner(ctx, data, packetID)
+		data := packetObject.EventDetails.(*f12020packets.RaceWinner)
+		if data == nil {
+			return fmt.Errorf("Failed to cast interface. Got nil")
+		}
+		err = client.insertRaceWinner(ctx, *data, packetID)
 		if err != nil {
 			return err
 		}
 	case "PENA":
-		data := packetObject.EventDetails.(f12020packets.Penalty)
-		err = client.insertPenalty(ctx, data, packetID)
+		data := packetObject.EventDetails.(*f12020packets.Penalty)
+		if data == nil {
+			return fmt.Errorf("Failed to cast interface. Got nil")
+		}
+		err = client.insertPenalty(ctx, *data, packetID)
 		if err != nil {
 			return err
 		}
 	case "SPTP":
-		data := packetObject.EventDetails.(f12020packets.SpeedTrap)
-		err = client.insertSpeedTrap(ctx, data, packetID)
+		data := packetObject.EventDetails.(*f12020packets.SpeedTrap)
+		if data == nil {
+			return fmt.Errorf("Failed to cast interface. Got nil")
+		}
+		err = client.insertSpeedTrap(ctx, *data, packetID)
 		if err != nil {
 			return err
 		}
@@ -143,12 +173,15 @@ func (client PostgreClient) InsertPacketEventData(ctx context.Context, packet in
 }
 
 func (client PostgreClient) InsertPacketParticipantsData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketParticipantsData)
+	packetObject := packet.(*f12020packets.PacketParticipantsData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	packetID, err := client.insertPacketParticipantsData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketParticipantsData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -162,12 +195,15 @@ func (client PostgreClient) InsertPacketParticipantsData(ctx context.Context, pa
 }
 
 func (client PostgreClient) InsertPacketCarSetupData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketCarSetupData)
+	packetObject := packet.(*f12020packets.PacketCarSetupData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	packetID, err := client.insertPacketCarSetupData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketCarSetupData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -181,13 +217,16 @@ func (client PostgreClient) InsertPacketCarSetupData(ctx context.Context, packet
 }
 
 func (client PostgreClient) InsertPacketCarTelemetryData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketCarTelemetryData)
+	packetObject := packet.(*f12020packets.PacketCarTelemetryData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketCarTelemetryData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketCarTelemetryData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -201,13 +240,16 @@ func (client PostgreClient) InsertPacketCarTelemetryData(ctx context.Context, pa
 }
 
 func (client PostgreClient) InsertPacketCarStatusData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketCarStatusData)
+	packetObject := packet.(*f12020packets.PacketCarStatusData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketCarStatusData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketCarStatusData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -221,13 +263,16 @@ func (client PostgreClient) InsertPacketCarStatusData(ctx context.Context, packe
 }
 
 func (client PostgreClient) InsertPacketFinalClassificationData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketFinalClassificationData)
+	packetObject := packet.(*f12020packets.PacketFinalClassificationData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketFinalClassificationData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketFinalClassificationData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}
@@ -241,13 +286,16 @@ func (client PostgreClient) InsertPacketFinalClassificationData(ctx context.Cont
 }
 
 func (client PostgreClient) InsertPacketLobbyInfoData(ctx context.Context, packet interface{}) error {
-	packetObject := packet.(f12020packets.PacketLobbyInfoData)
+	packetObject := packet.(*f12020packets.PacketLobbyInfoData)
+	if packetObject == nil {
+		return fmt.Errorf("Failed to cast interface. Got nil")
+	}
 	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
 
-	packetID, err := client.insertPacketLobbyInfoData(ctx, packetObject, headerID)
+	packetID, err := client.insertPacketLobbyInfoData(ctx, *packetObject, headerID)
 	if err != nil {
 		return err
 	}

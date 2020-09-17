@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS LapData (
   PRIMARY KEY (ID),
    FOREIGN KEY (PacketLapData_ID)
       REFERENCES PacketLapData (ID)      
-)
+);
 
 CREATE OR REPLACE PROCEDURE insert_packet_lap_data("ID" uuid, "PacketHeader_ID" uuid)
 LANGUAGE 'plpgsql'

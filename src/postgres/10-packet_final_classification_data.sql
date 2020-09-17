@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS FinalClassificationData (
    PenaltiesTime                      INT NOT NULL,
    NumPenalties                       INT NOT NULL,
    NumTyreStints                      INT NOT NULL,
-   TyreStintsActual                   INT[] NOT NULL,
-   TyreStintsVisual                   INT[] NOT NULL,
+   TyreStintsActual                   INT[] DEFAULT NULL,
+   TyreStintsVisual                   INT[] DEFAULT NULL,
    CreatedOn                          TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
@@ -41,11 +41,11 @@ AS $BODY$
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_final_classification_data("ID" uuid, "PacketFinalClassificationData_ID" uuid, "Position" integer, "NumLaps" integer, "GridPosition" integer, "Points" integer, "NumPitStops" integer, "ResultStatus" integer, "BestLapTime" double precision, "TotalRaceTime" double precision, "PenaltiesTime" integer, "NumPenalties" integer, "NumTyreStints" integer, "TyreStintsActual" integer[], "TyreStintsVisual" integer[])
+CREATE OR REPLACE PROCEDURE insert_final_classification_data("ID" uuid, "PacketFinalClassificationData_ID" uuid, "Position" integer, "NumLaps" integer, "GridPosition" integer, "Points" integer, "NumPitStops" integer, "ResultStatus" integer, "BestLapTime" double precision, "TotalRaceTime" double precision, "PenaltiesTime" integer, "NumPenalties" integer, "NumTyreStints" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO FinalClassificationData 
-		VALUES ("ID", "PacketFinalClassificationData_ID", "Position", "NumLaps", "GridPosition", "Points", "NumPitStops", "ResultStatus", "BestLapTime", "TotalRaceTime", "PenaltiesTime", "NumPenalties", "NumTyreStints", "TyreStintsActual", "TyreStintsVisual");
+		VALUES ("ID", "PacketFinalClassificationData_ID", "Position", "NumLaps", "GridPosition", "Points", "NumPitStops", "ResultStatus", "BestLapTime", "TotalRaceTime", "PenaltiesTime", "NumPenalties", "NumTyreStints");
 	END;
 $BODY$;
