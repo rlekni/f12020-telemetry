@@ -1,12 +1,51 @@
 version: "3.3"
 services:
+  postgres:
+    # image: arm64v8/postgres:13-alpine
+    image: postgres:13-alpine
+    restart: always
+    container_name: postgres
+    hostname: postgres
+    environment: 
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_USER=admin
+      - PGDATA=/var/lib/postgresql/data
+      - POSTGRES_DB=f12020telemetry
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - bridge
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    # image: biarms/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@telemetry.com
+      - PGADMIN_DEFAULT_PASSWORD=secret
+      - PGADMIN_LISTEN_PORT=80
+    ports:
+      - 8083:80
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - bridge
+  adminer:
+    image: adminer:latest
+    restart: always
+    container_name: adminer
+    ports:
+      - 8084:8080
+    networks: 
+      - bridge
   mongo:
     image: mongo
     restart: always
     container_name: f1-telemetry-mongo
     hostname: mongo
     volumes:
-      - ${HOME}/f1-telemetry/mongo/data:/mongodata
+      - mongo_data:/mongodata
     ports:
       - 27017:27017
     networks:
@@ -27,12 +66,19 @@ services:
     image: f1-telemetry-server:latest
     restart: always
     container_name: f1-telemetry-server
-    environment:
-      - UDP_PORT=20777
+    environment:      
+      - LOGS_PATH=/udp_logs      
       - MONGO_CONNECTION_STRING=mongodb://mongo:27017/f12020telemetry?retryWrites=true&w=majority
-      - LOGS_PATH=/f1-telemetry/udp/logs
+      - MONGO_DATABASE=f12020telemetry
+      - POSTGRES_DATABASE=f12020telemetry
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password123
+      - REPOSITORY_TYPE=MONGODB
+      - UDP_PORT=20777
     volumes:
-      - ${HOME}/f1-telemetry/udp/logs:/f1-telemetry/udp/logs
+      - udp_logs:/udp_logs
     ports:
       - 20777:20777/udp
     networks:
@@ -115,6 +161,10 @@ services:
 volumes:
   prometheus_data: {}
   grafana_data: {}
+  postgres_data: {}
+  pgadmin_data: {}
+  mongo_data: {}
+  udp_logs: {}
 
 networks:
   bridge:
