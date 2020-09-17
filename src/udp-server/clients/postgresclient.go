@@ -25,268 +25,237 @@ func (client PostgreClient) Insert(ctx context.Context, packetType string, packe
 
 func (client PostgreClient) InsertPacketMotionData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketMotionData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
+	if err != nil {
+		return err
+	}
+
+	packetID, err := client.insertPacketMotionData(ctx, packetObject, headerID)
 	if err != nil {
 		return err
 	}
 
 	for _, carMotionData := range packetObject.CarMotionData {
-		err = client.insertCarMotionData(ctx, carMotionData)
+		err = client.insertCarMotionData(ctx, carMotionData, packetID)
 		helpers.LogIfError(err)
 	}
 
-	args := []interface{}{
-		packetObject.SuspensionPositionRL,
-		packetObject.SuspensionPositionRR,
-		packetObject.SuspensionPositionFL,
-		packetObject.SuspensionPositionFR,
-		packetObject.SuspensionVelocityRL,
-		packetObject.SuspensionVelocityRR,
-		packetObject.SuspensionVelocityFL,
-		packetObject.SuspensionVelocityFR,
-		packetObject.SuspensionAccelerationRL,
-		packetObject.SuspensionAccelerationRR,
-		packetObject.SuspensionAccelerationFL,
-		packetObject.SuspensionAccelerationFR,
-		packetObject.WheelSpeedRL,
-		packetObject.WheelSpeedRR,
-		packetObject.WheelSpeedFL,
-		packetObject.WheelSpeedFR,
-		packetObject.WheelSlipRL,
-		packetObject.WheelSlipRR,
-		packetObject.WheelSlipFL,
-		packetObject.WheelSlipFR,
-		packetObject.LocalVelocityX,
-		packetObject.LocalVelocityY,
-		packetObject.LocalVelocityZ,
-		packetObject.AngularVelocityX,
-		packetObject.AngularVelocityY,
-		packetObject.AngularVelocityZ,
-		packetObject.AngularAccelerationX,
-		packetObject.AngularAccelerationY,
-		packetObject.AngularAccelerationZ,
-		packetObject.FrontWheelsAngle,
-	}
-	return client.insert(ctx, PacketMotionData, args...)
+	return nil
 }
 
 func (client PostgreClient) InsertPacketSessionData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketSessionData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
+	if err != nil {
+		return err
+	}
+
+	packetID, err := client.insertPacketSessionData(ctx, packetObject, headerID)
 	if err != nil {
 		return err
 	}
 
 	for _, data := range packetObject.MarshalZones {
-		err = client.insertMarshalZone(ctx, data)
+		err = client.insertMarshalZone(ctx, data, packetID)
 		helpers.LogIfError(err)
 	}
 
 	for _, data := range packetObject.WeatherForecastSamples {
-		err = client.insertWeatherForecastSample(ctx, data)
+		err = client.insertWeatherForecastSample(ctx, data, packetID)
 		helpers.LogIfError(err)
 	}
 
-	args := []interface{}{
-		packetObject.Weather,
-		packetObject.TrackTemperature,
-		packetObject.AirTemperature,
-		packetObject.TotalLaps,
-		packetObject.TrackLength,
-		packetObject.SessionType,
-		packetObject.TrackID,
-		packetObject.Formula,
-		packetObject.SessionTimeLeft,
-		packetObject.SessionDuration,
-		packetObject.PitSpeedLimit,
-		packetObject.GamePaused,
-		packetObject.IsSpectating,
-		packetObject.SpectatorCarIndex,
-		packetObject.SliProNativeSupport,
-		packetObject.NumMarshalZones,
-		packetObject.SafetyCarStatus,
-		packetObject.NetworkGame,
-		packetObject.NumWeatherForecastSamples,
-	}
-
-	return client.insert(ctx, PacketSessionData, args...)
+	return nil
 }
 
 func (client PostgreClient) InsertPacketLapData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketLapData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketLapData, "")
+
+	packetID, err := client.insertPacketLapData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+
+	for _, data := range packetObject.LapData {
+		err = client.insertLapData(ctx, data, packetID)
+		helpers.LogIfError(err)
+	}
+	return nil
 }
 
 func (client PostgreClient) InsertPacketEventData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketEventData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketEventData, "")
+
+	packetID, err := client.insertPacketEventData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+	switch packetObject.EventStringCode {
+	case "FTLP":
+		data := packetObject.EventDetails.(f12020packets.FastestLap)
+		err = client.insertFastestLap(ctx, data, packetID)
+		if err != nil {
+			return err
+		}
+	case "RTMT":
+		data := packetObject.EventDetails.(f12020packets.Retirement)
+		err = client.insertRetirement(ctx, data, packetID)
+		if err != nil {
+			return err
+		}
+	case "TMPT":
+		data := packetObject.EventDetails.(f12020packets.TeamMateInPits)
+		err = client.insertTeamMateInPits(ctx, data, packetID)
+		if err != nil {
+			return err
+		}
+	case "RCWN":
+		data := packetObject.EventDetails.(f12020packets.RaceWinner)
+		err = client.insertRaceWinner(ctx, data, packetID)
+		if err != nil {
+			return err
+		}
+	case "PENA":
+		data := packetObject.EventDetails.(f12020packets.Penalty)
+		err = client.insertPenalty(ctx, data, packetID)
+		if err != nil {
+			return err
+		}
+	case "SPTP":
+		data := packetObject.EventDetails.(f12020packets.SpeedTrap)
+		err = client.insertSpeedTrap(ctx, data, packetID)
+		if err != nil {
+			return err
+		}
+	default:
+		logrus.Warningf("Skipping insert: None of the event Codes matched event code supplied: %q.", packetObject.EventStringCode)
+	}
+
+	return nil
 }
 
 func (client PostgreClient) InsertPacketParticipantsData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketParticipantsData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketParticipantsData, "")
+	packetID, err := client.insertPacketParticipantsData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+
+	for _, data := range packetObject.Participants {
+		err = client.insertParticipantData(ctx, data, packetID)
+		helpers.LogIfError(err)
+	}
+
+	return nil
 }
 
 func (client PostgreClient) InsertPacketCarSetupData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketCarSetupData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketCarSetupData, "")
+	packetID, err := client.insertPacketCarSetupData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+
+	for _, data := range packetObject.CarSetups {
+		err = client.insertCarSetupData(ctx, data, packetID)
+		helpers.LogIfError(err)
+	}
+
+	return nil
 }
 
 func (client PostgreClient) InsertPacketCarTelemetryData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketCarTelemetryData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketCarTelemetryData, "")
+
+	packetID, err := client.insertPacketCarTelemetryData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+
+	for _, data := range packetObject.CarTelemetryData {
+		err = client.insertCarTelemetryData(ctx, data, packetID)
+		helpers.LogIfError(err)
+	}
+
+	return nil
 }
 
 func (client PostgreClient) InsertPacketCarStatusData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketCarStatusData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketCarStatusData, "")
+
+	packetID, err := client.insertPacketCarStatusData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+
+	for _, data := range packetObject.CarStatusData {
+		err = client.insertCarStatusData(ctx, data, packetID)
+		helpers.LogIfError(err)
+	}
+
+	return nil
 }
 
 func (client PostgreClient) InsertPacketFinalClassificationData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketFinalClassificationData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketFinalClassificationData, "")
+
+	packetID, err := client.insertPacketFinalClassificationData(ctx, packetObject, headerID)
+	if err != nil {
+		return err
+	}
+
+	for _, data := range packetObject.ClassificationData {
+		err = client.insertFinalClassificationData(ctx, data, packetID)
+		helpers.LogIfError(err)
+	}
+
+	return nil
 }
 
 func (client PostgreClient) InsertPacketLobbyInfoData(ctx context.Context, packet interface{}) error {
 	packetObject := packet.(f12020packets.PacketLobbyInfoData)
-	err := client.insertPacketHeader(ctx, packetObject.Header)
+	headerID, err := client.insertPacketHeader(ctx, packetObject.Header)
 	if err != nil {
 		return err
 	}
-	return client.insert(ctx, PacketLobbyInfoData, "")
-}
 
-func (client PostgreClient) insert(ctx context.Context, packetType string, args ...interface{}) error {
-	var id int
-	sqlStatement, err := getSQLStatement(packetType)
+	packetID, err := client.insertPacketLobbyInfoData(ctx, packetObject, headerID)
 	if err != nil {
 		return err
 	}
-	err = client.Database.QueryRow(*sqlStatement, args).Scan(&id)
-	helpers.LogIfError(err)
-	return err
-}
 
-func getSQLStatement(packetType string) (*string, error) {
-	var sql string
-	switch packetType {
-	case PacketHeader:
-		sql = packetHeaderSQL
-	case CarMotionData:
-		sql = carMotionDataSQL
-	case PacketMotionData:
-		sql = packetMotionDataSQL
-	case MarshalZone:
-		sql = marshalZoneSQL
-	case WeatherForecastSample:
-		sql = weatherForecastSampleSQL
-	case PacketSessionData:
-		sql = packetSessionDataSQL
-	case PacketLapData:
-		sql = packetLapDataSQL
-	case PacketEventData:
-		sql = packetEventDataSQL
-	case PacketParticipantsData:
-		sql = packetParticipantsDataSQL
-	case PacketCarSetupData:
-		sql = packetCarSetupDataSQL
-	case PacketCarTelemetryData:
-		sql = packetCarTelemetryDataSQL
-	case PacketCarStatusData:
-		sql = packetCarStatusDataSQL
-	case PacketFinalClassificationData:
-		sql = packetFinalClassificationDataSQL
-	case PacketLobbyInfoData:
-		sql = packetLobbyInfoDataSQL
-	default:
-		return nil, fmt.Errorf("PacketType: %s is not valid", packetType)
+	for _, data := range packetObject.LobbyPlayers {
+		err = client.insertLobbyInfoData(ctx, data, packetID)
+		helpers.LogIfError(err)
 	}
-	return &sql, nil
-}
 
-func (client PostgreClient) insertPacketHeader(ctx context.Context, header *f12020packets.PacketHeader) error {
-	args := []interface{}{
-		header.PacketFormat,
-		header.GameMajorVersion,
-		header.GameMinorVersion,
-		header.PacketVersion,
-		header.PacketID,
-		header.SessionUID,
-		header.SessionTime,
-		header.FrameIdentifier,
-		header.PlayerCarIndex,
-		header.SecondaryPlayerCarIndex,
-	}
-	return client.insert(ctx, PacketHeader, args...)
-}
-
-func (client PostgreClient) insertCarMotionData(ctx context.Context, data f12020packets.CarMotionData) error {
-	args := []interface{}{
-		data.WorldPositionX,
-		data.WorldPositionY,
-		data.WorldPositionZ,
-		data.WorldVelocityX,
-		data.WorldVelocityY,
-		data.WorldVelocityZ,
-		data.WorldForwardDirX,
-		data.WorldForwardDirY,
-		data.WorldForwardDirZ,
-		data.WorldRightDirX,
-		data.WorldRightDirY,
-		data.WorldRightDirZ,
-		data.GForceLateral,
-		data.GForceLongitudinal,
-		data.GForceVertical,
-		data.Yaw,
-		data.Pitch,
-		data.Roll,
-	}
-	return client.insert(ctx, CarMotionData, args...)
-}
-
-func (client PostgreClient) insertMarshalZone(ctx context.Context, data f12020packets.MarshalZone) error {
-	args := []interface{}{
-		data.ZoneStart,
-		data.ZoneFlag,
-	}
-	return client.insert(ctx, MarshalZone, args...)
-}
-
-func (client PostgreClient) insertWeatherForecastSample(ctx context.Context, data f12020packets.WeatherForecastSample) error {
-	args := []interface{}{
-		data.SessionType,
-		data.TimeOffset,
-		data.Weather,
-		data.TrackTemperature,
-		data.AirTemperature,
-	}
-	return client.insert(ctx, WeatherForecastSample, args...)
+	return nil
 }

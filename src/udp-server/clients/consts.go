@@ -1,20 +1,42 @@
 package clients
 
 const (
-	PacketHeader                  = "packetHeader"
-	CarMotionData                 = "carMotionData"
-	PacketMotionData              = "packetMotionData"
-	MarshalZone                   = "marshalZone"
-	WeatherForecastSample         = "weatherForecastSample"
-	PacketSessionData             = "packetSessionData"
-	PacketLapData                 = "packetLapData"
-	PacketEventData               = "packetEventData"
-	PacketParticipantsData        = "packetParticipantsData"
-	PacketCarSetupData            = "packetCarSetupData"
-	PacketCarTelemetryData        = "packetCarTelemetryData"
-	PacketCarStatusData           = "packetCarStatusData"
+	PacketHeader     = "packetHeader"
+	PacketMotionData = "packetMotionData"
+	CarMotionData    = "carMotionData"
+
+	PacketSessionData     = "packetSessionData"
+	MarshalZone           = "marshalZone"
+	WeatherForecastSample = "weatherForecastSample"
+
+	PacketLapData = "packetLapData"
+	LapData       = "lapData"
+
+	PacketEventData = "packetEventData"
+	FastestLap      = "fastestLap"
+	Retirement      = "retirement"
+	TeammateInPits  = "teammateInPits"
+	RaceWinner      = "raceWinner"
+	Penalty         = "penalty"
+	SpeedTrap       = "speedTrap"
+
+	PacketParticipantsData = "packetParticipantsData"
+	ParticipantData        = "participantData"
+
+	PacketCarSetupData = "packetCarSetupData"
+	CarSetupData       = "carSetupData"
+
+	PacketCarTelemetryData = "packetCarTelemetryData"
+	CarTelemetryData       = "carTelemetryData"
+
+	PacketCarStatusData = "packetCarStatusData"
+	CarStatusData       = "carStatusData"
+
 	PacketFinalClassificationData = "packetFinalClassificationData"
-	PacketLobbyInfoData           = "packetLobbyInfoData"
+	FinalClassificationData       = "finalClassificationData"
+
+	PacketLobbyInfoData = "packetLobbyInfoData"
+	LobbyInfoData       = "lobbyInfoData"
 )
 
 const (
