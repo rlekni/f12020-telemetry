@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS ParticipantData (
    TeamID                     INT NOT NULL,
    RaceNumber                 INT NOT NULL,
    Nationality                INT NOT NULL,
-   Name                       VARCHAR(48) NOT NULL,
+   Name                       VARCHAR(48),
    YourTelemetry              INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 

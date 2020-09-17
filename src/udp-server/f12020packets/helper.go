@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -435,13 +436,15 @@ func ToParticipantData(data []byte) (*ParticipantData, error) {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", participantDataLength, len(data))
 	}
 
+	name := string(data[5:53])
+	sanitisedName := strings.Replace(name, "\u0000", "", -1)
 	participantData := &ParticipantData{
 		AiControlled:  uint8(data[0]),
 		DriverID:      uint8(data[1]),
 		TeamID:        uint8(data[2]),
 		RaceNumber:    uint8(data[3]),
 		Nationality:   uint8(data[4]),
-		Name:          string(data[5:53]),
+		Name:          sanitisedName,
 		YourTelemetry: uint8(data[53]),
 	}
 
@@ -732,11 +735,13 @@ func ToLobbyInfoData(data []byte) (*LobbyInfoData, error) {
 		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", lobbyInfoDataLength, len(data))
 	}
 
+	name := string(data[5:53])
+	sanitisedName := strings.Replace(name, "\u0000", "", -1)
 	lobbyInfoData := &LobbyInfoData{
 		AiControlled: uint8(data[0]),
 		TeamID:       uint8(data[1]),
 		Nationality:  uint8(data[2]),
-		Name:         string(data[3:51]),
+		Name:         sanitisedName,
 		ReadyStatus:  uint8(data[52]),
 	}
 

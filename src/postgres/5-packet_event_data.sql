@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS PacketEventData (
    ID                         uuid DEFAULT uuid_generate_v4 (),
    PacketHeader_ID            uuid NOT NULL,
-   EventStringCode            VARCHAR(50) NOT NULL,
+   EventStringCode            VARCHAR(50),
    CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
@@ -128,12 +128,12 @@ AS $BODY$
 	END;
 $BODY$;
 
-CREATE OR REPLACE PROCEDURE insert_penalty("ID" uuid, "PacketEventData_ID" uuid, "PenaltyType" integer, "InfringementType" integer, "VehicleIdx" integer, "Time" integer, "LapNum" integer, "PlacesGained" integer)
+CREATE OR REPLACE PROCEDURE insert_penalty("ID" uuid, "PacketEventData_ID" uuid, "PenaltyType" integer, "InfringementType" integer, "VehicleIdx" integer, "OtherVehicleIdx" integer, "Time" integer, "LapNum" integer, "PlacesGained" integer)
 LANGUAGE 'plpgsql'
 AS $BODY$
 	BEGIN
 		INSERT INTO Penalty 
-		VALUES ("ID", "PacketEventData_ID", "PenaltyType", "InfringementType", "VehicleIdx", "Time", "LapNum", "PlacesGained");
+		VALUES ("ID", "PacketEventData_ID", "PenaltyType", "InfringementType", "VehicleIdx", "OtherVehicleIdx", "Time", "LapNum", "PlacesGained");
 	END;
 $BODY$;
 

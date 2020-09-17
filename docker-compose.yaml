@@ -75,7 +75,7 @@ services:
       - POSTGRES_PORT=5432
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password123
-      - REPOSITORY_TYPE=MONGODB
+      - REPOSITORY_TYPE=POSTGRES
       - UDP_PORT=20777
     volumes:
       - udp_logs:/udp_logs

@@ -33,7 +33,7 @@ type RepositoryType string
 
 const (
 	Mongo   RepositoryType = "MONGODB"
-	Postgre RepositoryType = "POSTGRE"
+	Postgre RepositoryType = "POSTGRES"
 )
 
 func NewRepositoryClient(ctx context.Context, repositoryType RepositoryType) RepositoryClient {

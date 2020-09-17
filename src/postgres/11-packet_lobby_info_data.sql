@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS LobbyInfoData (
    AiControlled                 INT NOT NULL,
    TeamID                       INT NOT NULL,
    Nationality                  INT NOT NULL,
-   Name                         VARCHAR(48) NOT NULL,
+   Name                         VARCHAR(48),
    ReadyStatus                  INT NOT NULL,
    CreatedOn                    TIMESTAMPTZ DEFAULT NOW(),
 

@@ -57,7 +57,7 @@ const (
 	retirementSQL      = `CALL public.insert_retirement($1, $2, $3)`
 	teammateInPitsSQL  = `CALL public.insert_teammate_in_pits($1, $2, $3)`
 	raceWinnerSQL      = `CALL public.insert_race_winner($1, $2, $3)`
-	penaltySQL         = `CALL public.insert_penalty($1, $2, $3, $4, $5, $6, $7, $8)`
+	penaltySQL         = `CALL public.insert_penalty($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 	speedTrapSQL       = `CALL public.insert_speed_trap($1, $2, $3, $4)`
 
 	packetParticipantsDataSQL = `CALL public.insert_packet_participants_data($1, $2, $3)`
@@ -73,7 +73,7 @@ const (
 	carStatusDataSQL       = `CALL public.insert_car_status_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38)`
 
 	packetFinalClassificationDataSQL = `CALL public.insert_packet_final_classification_data($1, $2, $3)`
-	finalClassificationDataSQL       = `CALL public.insert_final_classification_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`
+	finalClassificationDataSQL       = `CALL public.insert_final_classification_data($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`
 
 	packetLobbyInfoDataSQL = `CALL public.insert_packet_lobby_info_data($1, $2, $3)`
 	lobbyInfoDataSQL       = `CALL public.insert_lobby_info_data($1, $2, $3, $4, $5, $6, $7)`

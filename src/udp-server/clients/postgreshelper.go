@@ -7,9 +7,11 @@ import (
 	"main/helpers"
 
 	uuid "github.com/google/uuid"
+	"github.com/sirupsen/logrus"
 )
 
 func (client PostgreClient) insert(ctx context.Context, packetType string, args []interface{}) error {
+	logrus.Debugln("Looking up SQL statement for: ", packetType)
 	sqlStatement, err := getSQLStatement(packetType)
 	if err != nil {
 		return err

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS PacketHeader (
    GameMinorVersion        INT NOT NULL,
    PacketVersion           INT NOT NULL,
    PacketID                INT NOT NULL,
-   SessionUID              VARCHAR(250) NOT NULL,
+   SessionUID              VARCHAR(250),
    SessionTime             FLOAT NOT NULL,
    FrameIdentifier         INT NOT NULL,
    PlayerCarIndex          INT NOT NULL,

@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS PacketSessionData (
    NumMarshalZones            INT NOT NULL,
    SafetyCarStatus            INT NOT NULL,
    NetworkGame                INT NOT NULL,
+   NumWeatherForecastSamples  INT NOT NULL,
    CreatedOn                  TIMESTAMPTZ DEFAULT NOW(),
 
    PRIMARY KEY (ID),
