@@ -97,7 +97,7 @@ services:
       - bridge
   # Monitoring
   portainer:
-    image: portainer/portainer:alpine
+    image: portainer/portainer-ce:alpine
     restart: always
     container_name: portainer
     hostname: portainer
