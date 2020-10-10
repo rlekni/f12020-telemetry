@@ -1,4 +1,4 @@
-Bundle on Intel machine
+Bundle on Intel machine (https://github.com/meteor/meteor-feature-requests/issues/130)
 # Install git
 sudo apt-get install git
 
