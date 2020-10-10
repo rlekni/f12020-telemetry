@@ -44,3 +44,7 @@ cd <bundle>
 node main
 
 sample docker meteor https://github.com/disney/meteor-base
+https://github.com/tozd/docker-meteor
+https://guide.meteor.com/deployment.html
+https://dockerize.io/guides/docker-meteor-guide
+https://github.com/zodern/meteor-docker
