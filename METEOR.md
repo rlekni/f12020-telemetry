@@ -48,3 +48,5 @@ https://github.com/tozd/docker-meteor
 https://guide.meteor.com/deployment.html
 https://dockerize.io/guides/docker-meteor-guide
 https://github.com/zodern/meteor-docker
+https://www.meteor.com/tutorials/vue/creating-an-app
+https://guide.meteor.com/vue.html
