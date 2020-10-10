@@ -42,3 +42,5 @@ export PORT=3000
 Run bundled app
 cd <bundle>
 node main
+
+sample docker meteor https://github.com/disney/meteor-base
