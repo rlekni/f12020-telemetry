@@ -85,16 +85,6 @@ services:
       - bridge
     depends_on:
       - mongo
-  # Web app
-  f1-telemetry-web:
-    build: ./src/f1-telemetry-web
-    image: f1-telemetry-web:latest
-    restart: always
-    container_name: f1-telemetry-web
-    ports:
-      - 8085:80
-    networks:
-      - bridge
   # Monitoring
   portainer:
     image: portainer/portainer-ce:alpine
