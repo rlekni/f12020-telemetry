@@ -5,16 +5,18 @@ import (
 	"main/clients"
 	"main/f12020packets"
 	"main/helpers"
-	"os"
 
 	"github.com/sirupsen/logrus"
 )
 
 func DeserialisePacket(data []byte) {
 	ctx := context.Background()
-	repositoryType := os.Getenv("REPOSITORY_TYPE")
-	client := clients.NewRepositoryClient(ctx, clients.RepositoryType(repositoryType))
-	defer client.Disconnect(ctx)
+	client := clients.NewRepositoryClient(ctx)
+	defer func() {
+		if err := client.Disconnect(ctx); err != nil {
+			panic(err)
+		}
+	}()
 
 	header, err := f12020packets.ToPacketHeader(data[0:24])
 	if err != nil {
