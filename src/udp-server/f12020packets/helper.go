@@ -67,7 +67,7 @@ func convertTo8LengthUint8Array(data []byte) [8]uint8 {
 // 24 bytes
 func ToPacketHeader(data []byte) (*PacketHeader, error) {
 	if len(data) != packetHeaderLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetHeaderLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetHeaderLength, len(data))
 	}
 	header := &PacketHeader{
 		PacketFormat:            binary.LittleEndian.Uint16(data[0:2]),
@@ -78,8 +78,8 @@ func ToPacketHeader(data []byte) (*PacketHeader, error) {
 		SessionUID:              strconv.FormatUint(binary.LittleEndian.Uint64(data[6:14]), 10),
 		SessionTime:             convertToFloat32(data[14:18]),
 		FrameIdentifier:         binary.LittleEndian.Uint32(data[18:22]),
-		PlayerCarIndex:          uint8(22),
-		SecondaryPlayerCarIndex: uint8(23),
+		PlayerCarIndex:          uint8(data[22]),
+		SecondaryPlayerCarIndex: uint8(data[23]),
 	}
 
 	return header, nil
@@ -88,7 +88,7 @@ func ToPacketHeader(data []byte) (*PacketHeader, error) {
 // 60 bytes
 func ToCarMotionData(data []byte) (*CarMotionData, error) {
 	if len(data) != carMotionDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carMotionDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", carMotionDataLength, len(data))
 	}
 	motionData := &CarMotionData{
 		WorldPositionX:     convertToFloat32(data[0:4]),
@@ -121,7 +121,7 @@ func ToCarMotionData(data []byte) (*CarMotionData, error) {
 func ToPacketMotionData(data []byte, header *PacketHeader) (*PacketMotionData, error) {
 	logrus.Debugln("Decoding PacketMotionData")
 	if len(data) != packetMotionDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetMotionDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetMotionDataLength, len(data))
 	}
 
 	// 1320 bytes in total
@@ -178,7 +178,7 @@ func ToPacketMotionData(data []byte, header *PacketHeader) (*PacketMotionData, e
 
 func ToMarshalZone(data []byte) (*MarshalZone, error) {
 	if len(data) != marshalZoneLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", marshalZoneLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", marshalZoneLength, len(data))
 	}
 	marshalZone := &MarshalZone{
 		ZoneStart: convertToFloat32(data[0:4]),
@@ -190,7 +190,7 @@ func ToMarshalZone(data []byte) (*MarshalZone, error) {
 
 func ToWeatherForecastSample(data []byte) (*WeatherForecastSample, error) {
 	if len(data) != weatherForecastSampleLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", weatherForecastSampleLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", weatherForecastSampleLength, len(data))
 	}
 	weatherForecast := &WeatherForecastSample{
 		SessionType:      uint8(data[0]),
@@ -206,7 +206,7 @@ func ToWeatherForecastSample(data []byte) (*WeatherForecastSample, error) {
 func ToPacketSessionData(data []byte, header *PacketHeader) (*PacketSessionData, error) {
 	logrus.Debugln("Decoding PacketSessionData")
 	if len(data) != packetSessionDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetSessionDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetSessionDataLength, len(data))
 	}
 
 	// 105 bytes in total
@@ -264,7 +264,7 @@ func ToPacketSessionData(data []byte, header *PacketHeader) (*PacketSessionData,
 
 func ToLapData(data []byte) (*LapData, error) {
 	if len(data) != lapDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", lapDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", lapDataLength, len(data))
 	}
 
 	lapData := &LapData{
@@ -303,7 +303,7 @@ func ToLapData(data []byte) (*LapData, error) {
 func ToPacketLapData(data []byte, header *PacketHeader) (*PacketLapData, error) {
 	logrus.Debugln("Decoding PacketLapData")
 	if len(data) != packetLapDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetLapDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetLapDataLength, len(data))
 	}
 
 	// 100 bytes in total
@@ -328,7 +328,7 @@ func ToPacketLapData(data []byte, header *PacketHeader) (*PacketLapData, error) 
 
 func ToFastestLap(data []byte) *FastestLap {
 	if len(data) != fastestLapLength {
-		logrus.Errorf("Expected provided data to be %d length, but was %d", fastestLapLength, len(data))
+		logrus.Errorf("expected provided data to be %d length, but was %d", fastestLapLength, len(data))
 		return nil
 	}
 
@@ -366,7 +366,7 @@ func ToRaceWinner(data byte) *RaceWinner {
 
 func ToPenalty(data []byte) *Penalty {
 	if len(data) != penaltyLength {
-		logrus.Errorf("Expected provided data to be %d length, but was %d", penaltyLength, len(data))
+		logrus.Errorf("expected provided data to be %d length, but was %d", penaltyLength, len(data))
 		return nil
 	}
 
@@ -385,7 +385,7 @@ func ToPenalty(data []byte) *Penalty {
 
 func ToSpeedTrap(data []byte) *SpeedTrap {
 	if len(data) != speedTrapLength {
-		logrus.Errorf("Expected provided data to be %d length, but was %d", speedTrapLength, len(data))
+		logrus.Errorf("expected provided data to be %d length, but was %d", speedTrapLength, len(data))
 		return nil
 	}
 
@@ -400,7 +400,7 @@ func ToSpeedTrap(data []byte) *SpeedTrap {
 func ToPacketEventData(data []byte, header *PacketHeader) (*PacketEventData, error) {
 	logrus.Debugln("Decoding PacketEventData")
 	if len(data) != packetEventDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetEventDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetEventDataLength, len(data))
 	}
 	eventCode := string(data[0:4])
 
@@ -433,7 +433,7 @@ func ToPacketEventData(data []byte, header *PacketHeader) (*PacketEventData, err
 
 func ToParticipantData(data []byte) (*ParticipantData, error) {
 	if len(data) != participantDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", participantDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", participantDataLength, len(data))
 	}
 
 	name := string(data[5:53])
@@ -454,7 +454,7 @@ func ToParticipantData(data []byte) (*ParticipantData, error) {
 func ToPacketParticipantsData(data []byte, header *PacketHeader) (*PacketParticipantsData, error) {
 	logrus.Debugln("Decoding PacketParticipantsData")
 	if len(data) != packetParticipantsDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetParticipantsDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetParticipantsDataLength, len(data))
 	}
 
 	// 1188 bytes in total
@@ -479,7 +479,7 @@ func ToPacketParticipantsData(data []byte, header *PacketHeader) (*PacketPartici
 
 func ToCarSetupData(data []byte) (*CarSetupData, error) {
 	if len(data) != carSetupDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carSetupDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", carSetupDataLength, len(data))
 	}
 
 	carSetupData := &CarSetupData{
@@ -513,7 +513,7 @@ func ToCarSetupData(data []byte) (*CarSetupData, error) {
 func ToPacketCarSetupData(data []byte, header *PacketHeader) (*PacketCarSetupData, error) {
 	logrus.Debugln("Decoding PacketCarSetupData")
 	if len(data) != packetCarSetupDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetCarSetupDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetCarSetupDataLength, len(data))
 	}
 
 	// 1188 bytes in total
@@ -538,7 +538,7 @@ func ToPacketCarSetupData(data []byte, header *PacketHeader) (*PacketCarSetupDat
 func ToCarTelemetryData(data []byte) (*CarTelemetryData, error) {
 	logrus.Debugln("Decoding PacketCarTelemetryData")
 	if len(data) != carTelemetryDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carTelemetryDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", carTelemetryDataLength, len(data))
 	}
 
 	carTelemetryData := &CarTelemetryData{
@@ -579,7 +579,7 @@ func ToCarTelemetryData(data []byte) (*CarTelemetryData, error) {
 
 func ToPacketCarTelemetryData(data []byte, header *PacketHeader) (*PacketCarTelemetryData, error) {
 	if len(data) != packetCarTelemetryDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetCarTelemetryDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetCarTelemetryDataLength, len(data))
 	}
 
 	// 1276 bytes in total
@@ -608,7 +608,7 @@ func ToPacketCarTelemetryData(data []byte, header *PacketHeader) (*PacketCarTele
 
 func ToCarStatusData(data []byte) (*CarStatusData, error) {
 	if len(data) != carStatusDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", carStatusDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", carStatusDataLength, len(data))
 	}
 
 	carStatusData := &CarStatusData{
@@ -656,7 +656,7 @@ func ToCarStatusData(data []byte) (*CarStatusData, error) {
 func ToPacketCarStatusData(data []byte, header *PacketHeader) (*PacketCarStatusData, error) {
 	logrus.Debugln("Decoding PacketCarStatusData")
 	if len(data) != packetCarStatusDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetCarStatusDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetCarStatusDataLength, len(data))
 	}
 
 	// 1320 bytes in total
@@ -681,7 +681,7 @@ func ToPacketCarStatusData(data []byte, header *PacketHeader) (*PacketCarStatusD
 
 func ToFinalClassificationData(data []byte) (*FinalClassificationData, error) {
 	if len(data) != finalClassificationDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", finalClassificationDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", finalClassificationDataLength, len(data))
 	}
 
 	finalClassificationData := &FinalClassificationData{
@@ -706,7 +706,7 @@ func ToFinalClassificationData(data []byte) (*FinalClassificationData, error) {
 func ToPacketFinalClassificationData(data []byte, header *PacketHeader) (*PacketFinalClassificationData, error) {
 	logrus.Debugln("Decoding PacketFinalClassificationData")
 	if len(data) != packetFinalClassificationDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetFinalClassificationDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetFinalClassificationDataLength, len(data))
 	}
 
 	// 814 bytes in total
@@ -732,7 +732,7 @@ func ToPacketFinalClassificationData(data []byte, header *PacketHeader) (*Packet
 
 func ToLobbyInfoData(data []byte) (*LobbyInfoData, error) {
 	if len(data) != lobbyInfoDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", lobbyInfoDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", lobbyInfoDataLength, len(data))
 	}
 
 	name := string(data[5:53])
@@ -751,7 +751,7 @@ func ToLobbyInfoData(data []byte) (*LobbyInfoData, error) {
 func ToPacketLobbyInfoData(data []byte, header *PacketHeader) (*PacketLobbyInfoData, error) {
 	logrus.Debugln("Decoding PacketLobbyInfoData")
 	if len(data) != packetLobbyInfoDataLength {
-		return nil, fmt.Errorf("Expected provided data to be %d length, but was %d", packetLobbyInfoDataLength, len(data))
+		return nil, fmt.Errorf("expected provided data to be %d length, but was %d", packetLobbyInfoDataLength, len(data))
 	}
 
 	// 1144 bytes in total
