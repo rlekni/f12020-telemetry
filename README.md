@@ -1,4 +1,4 @@
-# go-f12020-telemetry
+# f12020-telemetry
 
 This repository is for easy telemetry capture from F1 2020 game. The whole stack can easily be run on raspberry pi 4.
 
